@@ -1,0 +1,45 @@
+[package]
+name = "polaris_scientist_run"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+description = "Runtime for Polaris research campaigns: one agent session per role call, and the polaris-scientist command"
+build = "build.rs"
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.clippy]
+doc_markdown = "warn"
+
+[lib]
+name = "polaris_scientist_run"
+path = "src/lib.rs"
+
+[[bin]]
+name = "polaris-scientist"
+path = "src/main.rs"
+
+[dependencies]
+polaris = { workspace = true, features = ["bedrock"] }
+polaris_code.workspace = true
+polaris_cosmos.workspace = true
+polaris_ontrace.workspace = true
+polaris_scientist = { path = "../polaris_scientist", version = "0.1.0" }
+tokio = { workspace = true, features = ["process", "signal"] }
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml = "0.8"
+clap = { version = "4", features = ["derive", "env"] }
+libc = "0.2"
+async-trait = "0.1"
+futures-util = "0.3"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"

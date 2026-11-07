@@ -1,0 +1,27 @@
+{
+  "idea_id": "explicit_score",
+  "title": "Explicit score improvement",
+  "hypothesis": "An explicit score improves the fixture objective.",
+  "implementation_plan": [
+    "Return a score of two."
+  ],
+  "target_rubrics": [
+    {
+      "id": "improve",
+      "type": "metric",
+      "description": "combined_score > 1.0"
+    },
+    {
+      "id": "explicit_score",
+      "type": "implementation",
+      "description": "Uses an explicit score variable",
+      "verification": {
+        "type": "source_contains",
+        "patterns": [
+          "score = 2.0"
+        ]
+      }
+    }
+  ],
+  "notes_for_agent": "Keep the candidate interface."
+}

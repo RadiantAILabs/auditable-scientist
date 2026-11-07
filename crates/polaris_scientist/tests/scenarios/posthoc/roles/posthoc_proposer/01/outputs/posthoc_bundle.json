@@ -1,0 +1,21 @@
+{
+  "decision": "propose_analyses",
+  "analyses": [
+    {
+      "id": "score_forensics",
+      "title": "Inspect retained scalar",
+      "family": "metric_forensics",
+      "hypothesis": "The retained score can be attributed to its program.",
+      "required_artifacts": [
+        "program/results/metrics.json"
+      ],
+      "requires_retrain": false,
+      "implementation_plan": [
+        "Read saved metrics and write an attribution diagnostic."
+      ],
+      "expected_outputs": [
+        "diagnostic.json"
+      ]
+    }
+  ]
+}

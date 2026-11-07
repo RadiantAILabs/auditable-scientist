@@ -1,0 +1,21 @@
+{
+  "ranking_rationale": "The attribution analysis supports the headline directly.",
+  "ranked_analyses": [
+    {
+      "analysis_id": "score_forensics",
+      "rank": 1,
+      "relevance_to_thesis": "high",
+      "relevance_justification": "It ties the score to the retained program.",
+      "recommended_usage": "main_results",
+      "key_finding_for_paper": "The score belongs to the program."
+    },
+    {
+      "analysis_id": "seed_comparison",
+      "rank": 2,
+      "relevance_to_thesis": "medium",
+      "relevance_justification": "It compares with the seed.",
+      "recommended_usage": "supporting",
+      "key_finding_for_paper": "The seed scores half as much."
+    }
+  ]
+}

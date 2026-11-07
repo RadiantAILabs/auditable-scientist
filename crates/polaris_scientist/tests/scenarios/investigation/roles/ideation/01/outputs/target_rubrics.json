@@ -1,0 +1,18 @@
+[
+  {
+    "id": "improve",
+    "type": "metric",
+    "description": "combined_score > 1.0"
+  },
+  {
+    "id": "explicit_score",
+    "type": "implementation",
+    "description": "Uses an explicit score variable",
+    "verification": {
+      "type": "source_contains",
+      "patterns": [
+        "score = 2.0"
+      ]
+    }
+  }
+]

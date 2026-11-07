@@ -1,0 +1,62 @@
+[
+  {
+    "paperId": "p1",
+    "title": "A circle packing algorithm",
+    "year": 2003,
+    "venue": "Computational Geometry",
+    "citationCount": 178,
+    "citationStyles": {
+      "bibtex": "@article{Collins2003,\n  title={A circle packing algorithm},\n  author={Collins, Charles R. and Stephenson, Kenneth},\n  journal={Computational Geometry},\n  year={2003}\n}"
+    }
+  },
+  {
+    "paperId": "p2",
+    "title": "Repeated patterns of dense packings of equal disks in a square",
+    "year": 1996,
+    "venue": "Electronic Journal of Combinatorics",
+    "citationCount": 120,
+    "citationStyles": {
+      "bibtex": "@article{Graham1996,\n  title={Repeated patterns of dense packings of equal disks in a square},\n  author={Graham, Ronald L. and Lubachevsky, Boris D.},\n  journal={Electronic Journal of Combinatorics},\n  year={1996}\n}"
+    }
+  },
+  {
+    "paperId": "p3",
+    "title": "New approaches to circle packing in a square",
+    "year": 2007,
+    "venue": "Springer",
+    "citationCount": 95,
+    "citationStyles": {
+      "bibtex": "@article{Szabo2007,\n  title={New approaches to circle packing in a square},\n  author={Szabo, P. G. and Markot, M. Cs. and Csendes, T.},\n  journal={Springer},\n  year={2007}\n}"
+    }
+  },
+  {
+    "paperId": "p4",
+    "title": "Optimization by simulated annealing",
+    "year": 1983,
+    "venue": "Science",
+    "citationCount": 60000,
+    "citationStyles": {
+      "bibtex": "@article{Kirkpatrick1983,\n  title={Optimization by simulated annealing},\n  author={Kirkpatrick, S. and Gelatt, C. D. and Vecchi, M. P.},\n  journal={Science},\n  year={1983}\n}"
+    }
+  },
+  {
+    "paperId": "p5",
+    "title": "Numerical optimization",
+    "year": 2006,
+    "venue": "Springer",
+    "citationCount": 40000,
+    "citationStyles": {
+      "bibtex": "@article{Nocedal2006,\n  title={Numerical optimization},\n  author={Nocedal, Jorge and Wright, Stephen J.},\n  journal={Springer},\n  year={2006}\n}"
+    }
+  },
+  {
+    "paperId": "p6",
+    "title": "Curved hexagonal packings of equal disks in a circle",
+    "year": 1997,
+    "venue": "Discrete and Computational Geometry",
+    "citationCount": 80,
+    "citationStyles": {
+      "bibtex": "@article{Lubachevsky1997,\n  title={Curved hexagonal packings of equal disks in a circle},\n  author={Lubachevsky, Boris D. and Graham, Ronald L.},\n  journal={Discrete and Computational Geometry},\n  year={1997}\n}"
+    }
+  }
+]

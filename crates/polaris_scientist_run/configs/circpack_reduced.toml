@@ -1,0 +1,13 @@
+# A reduced budget for a short run on the circle-packing task: fewer idea cycles,
+# one replication, two evaluations per variant and one selected analysis. These
+# four values are the only ones that differ from the defaults.
+
+[investigation.execution]
+max_idea_cycles = 2
+
+[ablations.execution]
+num_replications = 1
+max_evals_per_variant = 2
+
+[posthoc.execution]
+max_selected_analyses = 1

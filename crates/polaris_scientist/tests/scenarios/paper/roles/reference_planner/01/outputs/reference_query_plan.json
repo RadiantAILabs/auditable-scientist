@@ -1,0 +1,27 @@
+{
+  "status": "ready",
+  "central_topic": "circle packing by local search",
+  "core_methods": [
+    "local search",
+    "pair swaps"
+  ],
+  "comparators": [],
+  "benchmarks": [],
+  "architectural_shifts": [],
+  "result_driven_themes": [
+    "doubling the seed score"
+  ],
+  "forbidden_query_patterns": [],
+  "queries": [
+    {
+      "query": "circle packing in a square",
+      "rationale": "the task",
+      "category": "core_method"
+    },
+    {
+      "query": "simulated annealing",
+      "rationale": "the search family",
+      "category": "baseline_comparator"
+    }
+  ]
+}

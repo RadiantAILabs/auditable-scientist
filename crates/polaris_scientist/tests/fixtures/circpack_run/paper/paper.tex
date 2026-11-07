@@ -1,0 +1,348 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{paper,times}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+
+\title{A First-Order Rigidity Certificate for a 26-Circle Sum-of-Radii Packing: Time-Boxed Multistart SLSQP with a Linear-Programming Radius Polish}
+\iclrfinalcopy
+\input{paper_authors.tex}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Maximizing the sum of radii of 26 non-overlapping circles in the unit square is a small nonconvex benchmark on which a score is easy to report and hard to interpret: the number alone does not say which part of a solver produced it, or what kind of optimum it is.
+We study a time-boxed multistart pipeline that optimizes all 78 variables (centers and radii) with SLSQP using analytic Jacobians, re-solves the radii by a linear program at fixed centers, and keeps the best valid packing found within a 40\,s budget.
+It reaches a sum of radii of 2.6298, against a recorded score of 0.9598 for the recorded baseline-reference variant (a simpler construction; a ring layout is inferred from the control's fallback code, and the variant's source is not staged, so its identity is unverified).
+In a descriptive comparison with one observation per model variant, removing SLSQP lowers the sum to 2.4307, whereas removing the LP polish or using a single start leaves it unchanged.
+A post-hoc contact analysis shows that the packing is first-order rigid and isostatic: 57 circle contacts and 21 wall contacts match the 78 degrees of freedom, the active-constraint Jacobian has rank 78, all 78 KKT multipliers are strictly positive, and no circle is a rattler.
+We claim only a floating-point, first-order certificate (the active-constraint KKT conditions hold numerically at the stated contact tolerance) of a rigid stationary configuration: no second-order check was run, so local optimality is not established, global optimality is not claimed, and no held-out evaluation or replication exists.
+\end{abstract}
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.baseline_reference.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_slsqp_refinement.score.value]]
+% @evidence[[paper_data.json#posthoc_analyses.0.summary_text]]
+
+\section{Introduction}
+Packing circles of unequal radii into a container so that a size-dependent objective is maximized is a classical nonconvex problem with applications that range from layout design to origami \citep{Hifi2009Literature,Demaine2010Circle}.
+A widely used small instance asks for $n=26$ non-overlapping circles inside the unit square that maximize the \emph{sum of radii}.
+This instance is a standard test problem for LLM-driven evolutionary program search: it appears among the mathematical problems tackled by AlphaEvolve \citep{Alexander2025AlphaEvolve}, and open-source frameworks and surveys of this line of work have followed \citep{Assumpo2026CodeEvolve,Mao2026Driven}.
+Best-known packings are tabulated on the Packomania site, and recent reports of new records and certificates for circle packings refer to those tables \citep{Sander2026Guided,MokiJulio2026Moki,Preciado2026Certified}.
+We do not compare with any of these values (Section~\ref{sec:limits}); our interest is in what one concrete solver attains on the instance and what kind of optimum it returns.
+Because the objective rewards unequal circles, optimal arrangements are irregular, and a good score can come from many places: the choice of starting layouts, the local solver, the treatment of radii, or simply the time spent searching.
+Reporting only the final number leaves these sources entangled, and it says nothing about whether the arrangement is merely feasible, a stationary point, or a rigid configuration from which no first-order improvement exists.
+
+This paper asks two questions about one concrete solver for the $n=26$ instance.
+First, \emph{how much of the achieved sum of radii is attributable to each of its components}: constrained joint refinement of centers and radii with SLSQP, an exact linear-programming (LP) re-solve of the radii at fixed centers, and multistart?
+Second, \emph{what kind of stationary configuration does the resulting packing represent}?
+The solver is a time-boxed multistart pipeline (Figure~\ref{fig:overview}).
+Each start from a deterministic family of jittered layouts is refined by SLSQP over $(x,y,r)$ for all circles, the radii are re-solved by an LP with the centers held fixed, a $10^{-11}$ safety shrink is applied, and the best valid packing found within a 40\,s budget is returned.
+
+We organize the study around a deliberately narrow claim, in keeping with the amount of evidence available: one solver configuration, one recorded baseline-reference variant (described in the records only as a simpler construction; we infer a ring layout from the control's fallback code, but the variant's source is not staged), three single-component removals, and one structural analysis of the final packing.
+Our contributions are:
+\begin{itemize}
+\item A complete, reimplementable description of the 78-variable nonlinear program, its analytic constraint Jacobian, the start family, and the safeguards (LP re-solve, shrink, validity test, ring-construction fallback) that make the output strictly feasible.
+\item A descriptive comparison of five model variants on the sum of radii, with one observation per variant. The pipeline attains 2.6298 against a recorded score of 0.9598 for the baseline-reference variant, whose identity as the ring construction is an unverified inference; ratios and gap splits derived from this score are arithmetic on a recorded value of unverified provenance. Removing SLSQP is the only removal that changes the score (2.4307); removing the LP polish or multistart is a null effect here, which we report without defending those components.
+\item A contact-graph and rigidity analysis of the final packing: 57 circle contacts and 21 wall contacts equal the 78 degrees of freedom, the active Jacobian has full rank, all KKT multipliers are strictly positive, and no circle is a rattler. The hypothesis that loose circles carry the remaining slack is not supported.
+\item An explicit statement of scope: the result is a first-order certificate (active-constraint KKT conditions holding numerically at the stated tolerance) of a rigid stationary configuration, with no second-order or global evidence, no variance estimate, no comparison with published values, and no held-out evaluation.
+\end{itemize}
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_slsqp_refinement.score.value]]
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/pipeline_overview.pdf}
+\caption{Overview. The pipeline cycles through a deterministic start family; each start is refined by SLSQP over all centers and radii, the radii are re-solved by an LP at fixed centers, and a $10^{-11}$ shrink and a validity test precede best-so-far retention until the 40\,s budget is spent. Dashed orange boxes mark the three components removed in the controlled comparison (A--C). The recorded baseline-reference variant (simpler construction; ring layout inferred from the control's fallback code, variant source not staged) is the floor of the comparison; the control's own fallback is a ring construction. The thumbnail shows the final packing (circles shaded by contact degree, red lines for circle contacts), which has 78 contacts for 78 degrees of freedom. All scores are in-run evaluator values; no held-out evaluation exists.}
+\label{fig:overview}
+\end{figure}
+% @evidence[[paper_data.json#grounding_sources.ablation.baseline_reference.score.value]]
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[figures/pipeline_overview.pdf.prov.json]]
+
+\section{Related Work}
+\paragraph{Circle packing.}
+Circle and sphere packing has a long literature that spans models and methods \citep{Hifi2009Literature}, containers other than the square---circles inside a circle \citep{Ye2013Iterated,Zhou2024Geometric,Zhou2025Solution,Lpez2018Packing}, regular polygons \citep{Kampas2019Packing}, the sphere and spherical caps \citep{Newton2010Point,Amore2024Circle}, and the flat torus \citep{Musin2015Optimal}---as well as unit disks \citep{Lafreniere2008Packing}, online variants \citep{Lintzmayer2018Online}, bounds for spheres of several radii \citep{Laat2014Upper}, and hardness in origami design \citep{Demaine2010Circle}.
+Nature-inspired heuristics have also been applied to circle packing \citep{Mundra2024Circle}.
+Recent work casts packing problems as models for general-purpose global solvers \citep{Berthold2026Global}.
+We do not compare numerical results with any of these works, since the evidence in this study contains no reference values for them, and our contribution is not a new bound.
+
+\paragraph{Search over solver programs.}
+AlphaEvolve couples a language model with an evolutionary loop to improve programs for scientific and algorithmic problems \citep{Alexander2025AlphaEvolve}; open-source frameworks and surveys of LLM-driven program search followed \citep{Assumpo2026CodeEvolve,Mao2026Driven}, and ImprovEvolve combines basin hopping with LLM-guided evolutionary search \citep{Kravatskiy2026ImprovEvolve}.
+\citet{Sander2026Guided} study LLM-guided program evolution for circle packing against the Packomania tables. Our setting is narrower: we analyze one resulting solver configuration, attribute its score to components through removals, and characterize the optimum it returns, rather than propose a search procedure.
+
+\paragraph{Packing unequal circles in a square.}
+Our formulation treats centers and radii of unequal circles in a square as joint variables of a smooth nonlinear program. Heuristic searches for unequal circles in a square container work on closely related instances \citep{He2016Packing}, and general-purpose global solvers have been applied to packing models \citep{Berthold2026Global}. Best-known packings of equal circles, spheres and hyperspheres with exact certificates are reported in Packomania-based tables \citep{MokiJulio2026Moki}, and rigorous packing results exist for other containers \citep{Montanher2018Rigorous}. Our certificate is weaker than these: it is a floating-point, first-order analysis of one returned configuration (Section~\ref{sec:struct}).
+
+\paragraph{Local solvers and multistart.}
+Our local solver is sequential least-squares programming (SLSQP), the sequential quadratic programming routine exposed through SciPy's constrained minimizer; improved variants of SQP and SLSQP have been studied for feasible-path process optimization \citep{Ma2024Improved}. Multistart combines a local solver with many initial points; the cost of repeated local searches is itself a design concern in global optimization \citep{Tigli2020Saving}, basin hopping with LLM-guided search is one hybrid of local refinement and global exploration \citep{Kravatskiy2026ImprovEvolve}, and multi-start or iterated local search is a common ingredient of packing heuristics \citep{Ye2013Iterated,Zhou2024Geometric}. The radius re-solve at fixed centers is a plain linear program solved with the HiGHS backend of SciPy.
+
+\section{Method}
+\subsection{Problem setup}
+We place $n=26$ circles with centers $(x_i,y_i)$ and radii $r_i$ in the unit square $[0,1]^2$ so as to maximize the sum of radii. With $z=(x,y,r)\in\mathbb{R}^{78}$ the problem is the nonlinear program
+\begin{align}
+\max_{z}\ & \sum_{i=1}^{26} r_i \quad \text{s.t.}\label{eq:obj}\\
+& x_i-r_i\ge 0,\quad 1-x_i-r_i\ge 0,\quad y_i-r_i\ge 0,\quad 1-y_i-r_i\ge 0, && i=1,\dots,26,\label{eq:wall}\\
+& (x_i-x_j)^2+(y_i-y_j)^2-(r_i+r_j)^2\ge 0, && 1\le i<j\le 26,\label{eq:pair}
+\end{align}
+together with the box bounds $x_i,y_i\in[0,1]$ and $r_i\in[0,0.5]$. There are $4\cdot 26=104$ wall constraints and $\binom{26}{2}=325$ pair constraints.
+A packing is \emph{valid} if every circle lies inside the square and no two circles overlap, up to a tolerance of $10^{-12}$ in the solver's own check; the evaluator that scores a returned packing reports it as valid or not. The score of a packing is its sum of radii, and invalid packings are not scored.
+
+\subsection{Design rationale}
+The ring construction used as the control's in-pipeline fallback (which we infer, without staged source, to be the recorded baseline-reference variant) fixes the circle centers on a pattern and then derives radii greedily by proportional rescaling, so the radii are a by-product of the centers and the pairwise rescaling order. Our rationale for the pipeline rests on three observations about problem (\ref{eq:obj})--(\ref{eq:pair}).
+\begin{enumerate}
+\item \emph{Joint refinement.} The objective rewards unequal circles, and the feasible set couples every radius to its neighbours' radii and to the walls. Moving centers and radii together lets the solver trade a slightly smaller circle in one place for a larger one elsewhere, which fixed-radius rules cannot do. SLSQP with analytic Jacobians is a natural local method because the constraints are smooth and the problem is small.
+\item \emph{Exact radii at fixed centers.} For fixed centers, the optimal radii solve the LP $\max \sum_i r_i$ s.t. $r_i+r_j\le d_{ij}$ and $0\le r_i\le w_i$, where $d_{ij}$ is the center distance and $w_i$ the distance to the nearest wall. An LP re-solve therefore gives the best radii for the centers SLSQP returns, and guards against small constraint violations left by the nonlinear solver.
+\item \emph{Multistart.} Problem (\ref{eq:obj})--(\ref{eq:pair}) is nonconvex and has many local optima with different contact structure, so a diverse set of starts hedges against a poor basin.
+\end{enumerate}
+The central hypothesis is that joint refinement carries most of the benefit relative to the construction-only reference, while the LP polish and multistart are expected to help by guarding feasibility and basin choice. The controlled comparison tests which of these expectations the evidence supports; we report below that two of the three are not visible in a single observation.
+% @evidence[[data/program.py#_lp_radii]]
+% @evidence[[data/program.py#_cons]]
+
+\subsection{The pipeline}
+Algorithm~\ref{alg:pipeline} summarizes the staged source (Section~\ref{sec:impl} and Supplement~\ref{sec:si-repro} give the exact constants).
+\begin{figure}[t]
+\centering
+\fbox{\begin{minipage}{0.95\textwidth}
+\small
+\textbf{Algorithm 1.} Time-boxed multistart SLSQP with LP polish.\\[2pt]
+\textbf{Input:} budget $T=40$\,s, hard extra $6$\,s, shrink $\varepsilon=10^{-11}$.\\
+\textbf{Output:} centers $c\in[0,1]^{26\times 2}$, radii $r\in\mathbb{R}^{26}$, sum of radii.
+\begin{enumerate}
+\item[1.] Build the reference packing $(c_0,r_0)$; set $r_0\leftarrow\max(r_0-\varepsilon,0)$; best $\leftarrow (c_0,r_0)$.
+\item[2.] \textbf{for} $k=0,1,2,\dots$ \textbf{while} elapsed time $<T$:
+\item[3.] \hspace{1.2em} seed an RNG with $1000+k$; draw start centers $c^{(k)}$ from the start family (kind $k \bmod 5$).
+\item[4.] \hspace{1.2em} initial radii $0.9\times$ the greedy proportional radii of $c^{(k)}$; run SLSQP on (\ref{eq:obj})--(\ref{eq:pair}) with analytic Jacobians; abort if the clock exceeds $T+6$\,s.
+\item[5.] \hspace{1.2em} keep only the returned centers $c$ (clipped to $[0,1]$); solve the LP for radii at fixed $c$.
+\item[6.] \hspace{1.2em} $r\leftarrow\max(r-\varepsilon,0)$; \textbf{if} $\sum r>$ best sum \textbf{and} $(c,r)$ passes the validity test, best $\leftarrow(c,r)$.
+\item[7.] \hspace{1.2em} discard a start whose solve or LP raises an error.
+\item[8.] Return best (if it somehow fails the validity test, return the shrunk reference).
+\end{enumerate}
+\end{minipage}}
+\caption{Pseudo-code of the full pipeline, transcribed from the staged source file.}
+\label{alg:pipeline}
+\end{figure}
+% @evidence[[data/program.py#solution]]
+Two details matter for interpretation. First, the staged source passes only the SLSQP \emph{centers} on to the LP; the LP therefore sets the final radii in this configuration (the SLSQP radii are discarded), so the LP step is not a cosmetic polish in the staged code path. Second, the ring-construction fallback inside the control program guarantees that the pipeline's output is never below the fallback's value (less the shrink); whether the evaluated baseline-reference variant equals that fallback is unverified (Section~\ref{sec:variants}). The start family cycles through five layout kinds with a jitter that grows from $0.01$ to $0.06$; Table~\ref{tab:starts} in the Supplement lists them.
+
+\subsection{Compared model variants}\label{sec:variants}
+Five model variants were evaluated; each was scored once by the same evaluator.
+\begin{itemize}
+\item \textbf{Full pipeline} (control): the configuration described above.
+\item \textbf{Baseline-reference variant} (floor): recorded only as using ``a different, simpler construction'' than the optimization pipeline. Its source is not staged. The ring layout described next is inferred from the control's fallback function and is not established for the evaluated variant: a fixed center circle, a ring of 8 circles at distance $0.3$ from the center, and a ring of 16 at distance $0.7$, with centers clipped to $[0.01,0.99]$ and radii obtained greedily by proportional rescaling of the wall-limited radii. It is a reference construction, not a tuned or published baseline. The detailed construction is taken from the fallback function \texttt{\_baseline\_solution} in the staged control program (\texttt{dossier/best\_program/src/program.py}); we have not re-run it, so that the evaluated variant coincides with this construction is an assumption. The recorded score 0.9597642 is also numerically equal to that of another recorded attempt (\texttt{c01\_c01\_multistart\_slsqp\_lp\_polish\_attempt\_01}) in \texttt{paper\_data.json}, which is a further reason not to treat the variant's identity as settled. Note also that \texttt{paper\_data.json} lists the limitation ``The baseline has no valid recorded score, so no baseline comparison is made'', which conflicts with the valid score of 0.9598 recorded for this variant in the comparison records; we use that recorded score only as a floor within this comparison, and every ratio or gap split derived from it is arithmetic on a recorded value of unverified provenance.
+\item \textbf{(A) No SLSQP refinement}: the SLSQP step is removed while the other components stay. Hypothesis: if joint refinement of centers and radii matters, the score should fall.
+\item \textbf{(B) No LP polish}: the final LP re-solve of radii is removed. Hypothesis: if the LP gives radii beyond what SLSQP already reaches, the score should fall.
+\item \textbf{(C) Single start}: the multistart loop is replaced by a single initialization. Hypothesis: if several starts are needed to reach a good basin, the score should fall.
+\end{itemize}
+The source files of the three ablated variants are not part of the staged evidence; we describe them by the component each was constructed to remove, as recorded in the variant descriptions of the comparison. Because the removals are applied to a sequentially optimized pipeline and are not mutually orthogonal, they support comparisons between these configurations, not an isolated causal attribution to a component.
+% @evidence[[paper_data.json#ablations.variants]]
+% @evidence[[dossier/ablations/variant_summaries.json]]
+% @evidence[[dossier/best_program/src/program.py]]
+
+\subsection{Experimental protocol}
+Each model variant was evaluated once: one seeded run per variant (the number of replications requested and observed is 1), with no cross-task transfer. The metric is the evaluator's sum of radii for a returned packing that it accepts as valid. All five evaluations returned valid packings, so no filtering of invalid runs was needed. We report raw scores with no error bars: a single observation per variant gives no estimate of variance, and no statistical test is attempted. A \emph{null effect} below means that the one observed score is identical to the control to all printed digits; it does not show that the component is useless. The final held-out evaluation of the study did not run, so no held-out result exists and every number in this paper is an in-run development value.
+% @evidence[[paper_data.json#grounding_sources.result.ablation_replications_observed.value]]
+% @evidence[[paper_data.json#final_evaluation.status]]
+
+\subsection{Structural analysis of the final packing}\label{sec:struct}
+We analyze the returned packing (centers and radii from the evaluator output) without further optimization. Let the \emph{gap} of a constraint be its slack: $d_{ij}-r_i-r_j$ for pairs and $x_i-r_i$, $1-x_i-r_i$, $y_i-r_i$, $1-y_i-r_i$ for walls. A constraint is \emph{active} (a contact) if its gap is at most a tolerance $\tau$. For the active set we form the Jacobian $J$ of the active constraint functions (written as $c_k(z)\ge 0$ with $c_k=d_{ij}-r_i-r_j$ for pairs) with respect to $z=(x,y,r)$, whose rows are $(u_{ij},-1;\,-u_{ij},-1)$ on the entries of circles $i,j$ with $u_{ij}=(\mathbf{c}_i-\mathbf{c}_j)/\|\mathbf{c}_i-\mathbf{c}_j\|$, and unit-direction rows for walls. The packing is \emph{isostatic} if the number of active constraints equals the number of variables, $78$ (the walls remove translations, so no trivial modes are subtracted), and \emph{first-order rigid} if $J$ has full rank. For a maximization problem, the first-order (KKT) conditions require multipliers $\lambda\ge 0$ with
+\begin{equation}
+J^{\top}\lambda=-\nabla\Big(\sum_i r_i\Big)=-e_r,\label{eq:kkt}
+\end{equation}
+where $e_r$ is the indicator of the radius coordinates. We solve (\ref{eq:kkt}) by non-negative least squares and cross-check with an unconstrained least-squares solve. The rank is computed from singular values with a relative threshold of $10^{-8}$. We also compute each circle's degree (circle contacts plus wall contacts), identify circles with fewer than three contacts as potential rattlers, and test whether the circle-contact graph is connected. All of this is first-order information: it says nothing about curvature of the nonlinear constraints, and nothing about other contact topologies.
+The vocabulary is borrowed from the study of jammed contact networks, where isostatic means as many contacts as degrees of freedom and a rattler is a circle not held by the network; here it only serves to read the active set and the multipliers of a nonlinear program. The KKT conditions are necessary for local optimality; a second-order test would be needed to separate a strict local maximum from other stationary configurations, and we did not run one. Exact certificates of the kind reported for best-known packings \citep{MokiJulio2026Moki} and rigorous verified-computation methods \citep{Montanher2018Rigorous} are stronger than the floating-point analysis used here.
+
+\subsection{Implementation details}\label{sec:impl}
+The staged solver is a single Python file that uses NumPy, SciPy's SLSQP (\texttt{scipy.optimize.minimize}) and the HiGHS LP backend of \texttt{scipy.optimize.linprog}. SLSQP is called with \texttt{maxiter}=400, \texttt{ftol}=$10^{-10}$, bounds $[0,1]$ on coordinates and $[0,0.5]$ on radii, the objective $-\sum r_i$ with constant gradient, and the 429 inequality constraints supplied with a vectorized analytic Jacobian (the 104 wall rows are constant). A per-iteration callback aborts the call when the wall clock passes $T+6$\,s. The number of starts completed inside the budget depends on the machine and was not logged, so it is not reported. Supplement~\ref{sec:si-repro} gives the remaining constants.
+% @evidence[[data/program.py#_run_slsqp]]
+
+\section{Results}
+\subsection{Main comparison}
+Table~\ref{tab:main} and Figure~\ref{fig:comparison} give the five-variant comparison. The full pipeline returns a valid packing with sum of radii $2.6298$, against the recorded score of $0.9598$ of the baseline-reference variant, a factor of about $2.74$ (a ratio to a recorded score whose provenance is unverified; the variant's source is not staged and its identity as the ring construction is inferred from the control's fallback code, see the previous section). Removing SLSQP lowers the score to $2.4307$, i.e.\ by $0.1991$ ($7.6\%$ of the control). Removing the LP polish or using a single start returns exactly the control score, $2.6298$, to all printed digits (and in fact to full double precision in the recorded values).
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.baseline_reference.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_slsqp_refinement.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_lp_polish.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_single_start.score.value]]
+
+\begin{table}[t]
+\centering
+\caption{Controlled comparison of five model variants. One seeded run per variant; no variance estimate. $\Delta$ is the score minus the full-pipeline score.}
+\label{tab:main}
+\small
+\begin{tabular}{llcc}
+\toprule
+Model variant & Alteration & Sum of radii & $\Delta$ \\
+\midrule
+Full pipeline & none (control) & 2.6298 & 0 \\
+(A) No SLSQP & SLSQP refinement removed & 2.4307 & $-0.1991$ \\
+(B) No LP polish & LP radius re-solve removed & 2.6298 & 0 \\
+(C) Single start & one initialization only & 2.6298 & 0 \\
+Baseline-reference variant$^\dagger$ & simpler construction (source not staged) & 0.9598 & $-1.6700$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\raggedright\footnotesize $^\dagger$Recorded as ``a different, simpler construction''; a ring layout is inferred from the control's fallback code but not established for this variant, and its recorded score is of unverified provenance.
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/controlled_comparison.pdf}
+\caption{Sum of radii for the five model variants (one observation each, so no error bars; axis starts at zero). Orange bars are single-component removals. The score gap between the full pipeline and the no-SLSQP variant is small relative to the gap to the baseline-reference variant (simpler construction; ring layout inferred from the control's fallback code, source not staged, so the recorded score of that bar has unverified provenance).}
+\label{fig:comparison}
+\end{figure}
+% @evidence[[figures/controlled_comparison.pdf.prov.json]]
+
+\subsection{Attribution and what the nulls do and do not show}
+The comparison is a descriptive, single-observation comparison between configurations; it separates three questions.
+\paragraph{SLSQP is the only removal that changes the score.} Removing it costs $0.1991$ in the sum of radii. This drop is consistent with, but does not establish, a contribution of constrained joint refinement of centers and radii: it is one unreplicated score difference, the ablated source is unavailable, and the removals are sequential and non-orthogonal. The no-SLSQP variant still reaches $2.4307$, so about $88\%$ of the $1.6700$ gap between the baseline-reference score and the control is already closed without SLSQP, and the remaining $12\%$ ($0.1991$) is the difference to the control. This split is arithmetic on three single observations, one of which (the baseline-reference score) has unverified provenance; the variant still contains the start family, multistart and the LP step, so the large jump over the reference reflects those components jointly, and our data cannot say which of them carries it. In particular, we make no claim that SLSQP explains the bulk of the gain over the reference.
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_slsqp_refinement.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.baseline_reference.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.control_best.score.value]]
+
+\paragraph{The LP polish and multistart show no measurable effect here.} Both ablated variants reproduce the control score exactly. We report this as a null result in one observation. It does not show the components are useless, and the identity of the scores admits several explanations that this study cannot discriminate: (i) the SLSQP solution may already be LP-optimal in its radii, so the extra LP step changes nothing; (ii) the start that produced the best packing may be reached by the single-start variant too, so that all starts land in the same basin for this instance; (iii) the ablated variants may differ from the control only in code paths that did not affect the retained solution. All three are untested hypotheses. We also stress that bit-identical sums across variants are not what independent runs of a time-boxed search would be expected to give in general, and we cannot verify the ablated sources; the null results should therefore be read as ``not distinguishable in this single observation'', and we draw no inference about the landscape of the $n=26$ problem from them.
+
+\paragraph{The baseline-reference variant is a floor, not a competitor.} If it is the ring construction (an inference, see above), it uses no optimization, so beating it demonstrates only that optimization of some kind helps; it says nothing about external methods, and we make no comparison with published values.
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_lp_polish.score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_single_start.score.value]]
+
+\subsection{Structural certificate of the final packing}
+Figure~\ref{fig:certificate} shows the final packing and its constraint gaps. At any tolerance from $10^{-10}$ to $10^{-3}$ the packing has exactly $78$ active constraints: $57$ circle--circle tangencies and $21$ wall contacts (bottom 6, left 5, right 5, top 5). This equals the $3\cdot 26=78$ variables, so the packing is isostatic. The $78\times 78$ active-constraint Jacobian has rank $78$ and a trivial null space at every one of these tolerances, so the packing is first-order rigid. Solving (\ref{eq:kkt}) gives a residual of $0$ (least-squares residual $7\times10^{-15}$) with all $78$ multipliers strictly positive, from $0.0453$ to $0.4221$; since the multiplier system is square and non-singular, the multipliers are unique. The returned packing therefore satisfies the active-constraint first-order (KKT) conditions numerically at the stated contact tolerance, with a full-rank Jacobian and strictly positive multipliers. The active set is picked by a tolerance on gaps of about $10^{-11}$ to $2\times10^{-11}$ left by the radius shrink, so these are near-active rather than exactly active constraints. We do not infer from this that the solver converged rather than stopped early: no SLSQP termination status is staged. Because the contacts are nonlinear and no second-order check was run, this is a first-order certificate of a rigid stationary configuration, not a proof of local optimality.
+% @evidence[[data/contact_graph_rigidity.json#per_tolerance]]
+% @evidence[[paper_data.json#posthoc_analyses.0.summary_text]]
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/contact_certificate.pdf}
+\caption{Final packing and constraint gaps. (a) The packing drawn to scale, circles shaded by total contact degree and labelled by index; red lines are circle--circle contacts and blue dashed lines are wall contacts. (b) All $429$ constraint gaps sorted in ascending order on a log scale: $78$ gaps lie at or below $2.0\times10^{-11}$ and the next smallest is $0.0466$, so the active set does not depend on the tolerance over a range of more than nine orders of magnitude.}
+\label{fig:certificate}
+\end{figure}
+% @evidence[[figures/contact_certificate.pdf.prov.json]]
+% @evidence[[data/gap_summary.json]]
+
+\paragraph{No rattlers; slack lies in the voids.} Every circle has total degree at least $4$; the degree histogram is $\{4{:}4,\,5{:}15,\,6{:}5,\,7{:}2\}$, no circle has fewer than three contacts, and the circle-contact graph is a single connected component of all $26$ circles. The hypothesis that a few loose circles (rattlers) carry slack is therefore not supported. Radii range from $0.0659$ (circle 5, a corner circle) to $0.1274$ (circle 7, an interior circle), and no circle is free to grow or move. The area that the packing does not cover lies in the interstitial voids between tangent circles, so the loss is geometric, not due to under-used circles.
+
+\paragraph{Tolerance dependence is a bookkeeping effect.} The gaps are cleanly bimodal. Wall gaps are about $1.0\times10^{-11}$ and circle--circle gaps are about $2.0\times10^{-11}$, because each radius was reduced by $10^{-11}$ for feasibility; the largest ``contact'' gap is $2.0007\times10^{-11}$, and the next gap, between circles 19 and 23, is $0.0466$. At a tolerance of $10^{-12}$ or below the analysis reports $0$ contacts, simply because the safety margin exceeds the tolerance. This is not a physical statement, and tangency counts must always be read together with the tolerance used (Supplement Table~\ref{tab:tol}). The shrink reduces the sum by about $26\times10^{-11}$.
+% @evidence[[data/contact_graph_rigidity.json#smallest_gaps_sorted]]
+% @evidence[[data/gap_summary.json]]
+
+\subsection{Limitations and threats to validity}\label{sec:limits}
+\begin{itemize}
+\item \textbf{Single observation.} Each variant was run once; there is no variance estimate, and the time-boxed search is sensitive to machine speed because the number of completed starts is not fixed. Differences of the size of $0.1991$ are therefore descriptive.
+\item \textbf{Unverified ablated sources.} The ablated variants cannot be inspected, so our description of what they remove rests on their recorded descriptions.
+\item \textbf{Local, first-order certificate.} The active-constraint KKT conditions hold numerically at the stated contact tolerance, with a full-rank active Jacobian. We did not run a second-order check on the nonlinear contacts, and we claim first-order rigidity only; local optimality is not established. A stationary point need not be a local optimum, let alone a global one, and the analysis says nothing about other contact topologies that may score higher.
+\item \textbf{No external comparison.} The evidence contains no best-known value for $n=26$, no comparison with other solvers, and no held-out evaluation; we make no claim about relative standing.
+\item \textbf{Single instance.} Only $n=26$ in the unit square was studied. Nothing here transfers to other $n$ or other containers.
+\end{itemize}
+
+\section{Conclusion}
+We described and dissected a time-boxed multistart SLSQP pipeline with an LP radius polish for maximizing the sum of radii of 26 circles in the unit square. It returns a valid packing with sum of radii $2.6298$, compared with a recorded score of $0.9598$ for the recorded baseline-reference variant (a simpler construction; its ring layout is inferred from the control's fallback code and its source is not staged, so its identity and the derived ratio are unverified). In a single-observation, descriptive comparison, removing SLSQP is the only change that lowers the score (to $2.4307$), while removing the LP polish or multistart leaves it unchanged; we read these nulls as undetected rather than absent effects, and the no-SLSQP drop as consistent with, but not establishing, a contribution of joint refinement. A contact analysis shows that the packing is isostatic (57 circle and 21 wall contacts for 78 degrees of freedom), first-order rigid, with active-constraint KKT conditions that hold numerically at the stated contact tolerance (strictly positive multipliers) and no rattlers.
+
+What the study supports is a descriptive single-observation comparison between configurations and a first-order certificate (numerical active-constraint KKT conditions) of a rigid stationary configuration; what it does not support is a claim of local or global optimality, of a component-level mechanism, of superiority over other methods, or of robustness across seeds. Useful next steps are replicated runs with variance estimates, ablation variants whose sources are retained, a second-order test of the contacts, a comparison of the contact topology against other basins found by the multistart, and a comparison with published values for $n=26$ if such values are brought into scope.
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[paper_data.json#grounding_sources.ablation.ablation_no_slsqp_refinement.score.value]]
+
+% IMPORTANT: \clearpage flushes all pending floats before references so that
+% body-page counting excludes reference-only pages.  Do NOT remove.
+\clearpage
+\bibliography{references}
+\bibliographystyle{paper}
+
+\clearpage
+\appendix
+\section{Supplementary Information}
+
+\subsection{Reimplementation details}\label{sec:si-repro}
+Table~\ref{tab:starts} lists the start family and solver constants as they appear in the staged solver source. For start index $k$ the kind is $k \bmod 5$ and the base jitter is $\sigma_k=(0.01,0.025,0.04,0.06)[\lfloor k/5\rfloor \bmod 4]$; the RNG is \texttt{numpy.random.default\_rng}$(1000+k)$. Start coordinates are Gaussian-perturbed and clipped to $[0.03,0.97]$ (except the uniform random kind, drawn in $[0.05,0.95]^2$).
+% @evidence[[data/program.py#_make_start]]
+
+\begin{table}[h]
+\centering
+\caption{Start family and solver settings of the full pipeline (from the staged source).}
+\label{tab:starts}
+\small
+\begin{tabular}{p{0.24\textwidth}p{0.68\textwidth}}
+\toprule
+Kind ($k \bmod 5$) & Layout \\
+\midrule
+0 & Rows of circles, row-count pattern $\lfloor k/5\rfloor \bmod 6$ of $[5,5,5,5,6]$, $[6,5,6,5,4]$, $[5,6,5,6,4]$, $[4,5,4,5,4,4]$, $[6,5,5,5,5]$, $[4,4,5,4,5,4]$; row $m$ at height $(m+\tfrac12)/\#\text{rows}$, equal spacing in a row; jitter $\sigma_k$ \\
+1 & $5\times 5$ grid of cell centers plus one uniformly random circle in $[0.1,0.9]^2$; jitter $\sigma_k$ \\
+2 & One central circle, 8 circles on a ring of radius $0.3$, 16 on a ring of radius $0.7$ (clipped to $[0.03,0.97]$); jitter $\sigma_k+0.01$ \\
+3 & Rows as in kind 0 but with pattern index $\lfloor k/3\rfloor \bmod 6$; jitter $\sigma_k+0.02$ \\
+4 & 26 centers uniformly random in $[0.05,0.95]^2$ \\
+\midrule
+SLSQP & \texttt{maxiter}=400, \texttt{ftol}=$10^{-10}$; $x,y\in[0,1]$, $r\in[0,0.5]$; initial radii $0.9\times$ proportional-rescaling radii of the start; analytic Jacobians; 104 wall + 325 pair constraints \\
+LP & HiGHS; maximize $\sum r_i$ s.t.\ $r_i+r_j\le d_{ij}$, $0\le r_i\le w_i$ at the SLSQP centers (clipped to $[0,1]$) \\
+Budget & loop while elapsed $<40$\,s; running SLSQP call aborted after $46$\,s \\
+Finish & subtract $10^{-11}$ from every radius; accept if sum improves and validity test (tolerance $10^{-12}$) passes; fallback to shrunk reference \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Controlled-comparison records}
+Table~\ref{tab:records} lists the recorded evaluation of every model variant. All five returned a valid packing; each has one evaluation and no variant hit an evaluation cap. Replications requested and observed were both $1$, and no cross-task evaluation was run.
+% @evidence[[paper_data.json#ablations.variants]]
+% @evidence[[paper_data.json#grounding_sources.result.ablation_replications_requested.value]]
+
+\begin{table}[h]
+\centering
+\caption{Records of the controlled comparison (sum of radii from the evaluator).}
+\label{tab:records}
+\small
+\begin{tabular}{llccc}
+\toprule
+Model variant & Role & Valid & Evaluations & Sum of radii \\
+\midrule
+Full pipeline & control & yes & 1 & 2.6297544 \\
+Baseline-reference variant$^\dagger$ & floor & yes & 1 & 0.9597642 \\
+No SLSQP refinement & ablation & yes & 1 & 2.4306532 \\
+No LP polish & ablation & yes & 1 & 2.6297544 \\
+Single start & ablation & yes & 1 & 2.6297544 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\raggedright\footnotesize $^\dagger$Recorded as ``a different, simpler construction''; source not staged; ring identity inferred only from the control's fallback code.
+\end{table}
+
+\subsection{Final packing}
+Table~\ref{tab:packing} gives the centers, radii and contact degrees of the final packing (indices are zero-based; degrees at tolerance $10^{-7}$). The reported sum of radii is $2.6297544$.
+% @evidence[[data/extra.npz]]
+% @evidence[[data/contact_graph_rigidity.json#main.degree_total]]
+
+\begin{table}[h]
+\centering
+\caption{Final packing: centers, radii, and total contact degree (circle plus wall contacts).}
+\label{tab:packing}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\input{tables/final_packing.tex}
+\end{table}
+
+\subsection{Tolerance sweep of the contact analysis}
+Table~\ref{tab:tol} reports the contact count, Jacobian rank, null-space dimension, number of circles with fewer than three contacts, and the KKT multiplier range at each tolerance. The active set, rank and multipliers are identical for every tolerance from $10^{-10}$ to $10^{-3}$. At $10^{-12}$ no constraint is counted as active because of the $10^{-11}$ radius shrink, and the multiplier system is empty.
+% @evidence[[data/contact_graph_rigidity.json#per_tolerance]]
+
+\begin{table}[h]
+\centering
+\caption{Contact analysis versus tolerance. ``Circle'' and ``Wall'' count active circle--circle and wall constraints; ``Low-degree'' counts circles with fewer than three contacts.}
+\label{tab:tol}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\input{tables/tolerance_sweep.tex}
+\end{table}
+
+\subsection{Further notes on the evidence}
+The first-order analysis shows that the active-constraint KKT conditions hold numerically at the stated contact tolerance, with a full-rank Jacobian and positive multipliers; the active set consists of near-active constraints (gaps of about $10^{-11}$ to $2\times10^{-11}$ left by the radius shrink). This is the same statement as in the main text; it is not evidence of convergence versus a premature stop, since no SLSQP termination status is staged, and no second-order check was run. The posthoc figure produced with the original analysis had no text labels, so Figure~\ref{fig:certificate} was regenerated from the final centers and radii; its contact set matches the original counts (57 circle and 21 wall contacts at tolerance $10^{-7}$). The scripts that build the figures and tables read only files in the paper folder (\texttt{scripts/make\_figures.py}, \texttt{scripts/make\_tables.py}).
+% @evidence[[scripts/make_figures.py]]
+% @evidence[[scripts/make_tables.py]]
+
+\section{LLM Usage}
+Large language models were used in this work in two roles. First, the solver configurations evaluated here were produced and evaluated within an automated, LLM-driven optimization workflow, and an LLM drafted the manuscript text and the figure and table scripts from the recorded run artifacts. Second, the numbers in the paper were taken from the recorded evaluator outputs and the post-hoc analysis files, not generated by the LLM. The authors' experimental claims are limited to what those files support.
+
+\end{document}

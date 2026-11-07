@@ -1,0 +1,20 @@
+{
+  "status": "ready",
+  "summary": "The related work cites few packings of disks in a circle.",
+  "missing_literatures": [
+    "packings in a circle"
+  ],
+  "rewrite_targets": [
+    {
+      "target_id": "g1",
+      "section": "Related Work",
+      "priority": "medium",
+      "citation_intent": "background",
+      "reason": "dense packings of disks in a circle are not cited",
+      "anchor_text": "Dense packings have been studied for decades",
+      "search_topics": [
+        "curved hexagonal packings of disks"
+      ]
+    }
+  ]
+}

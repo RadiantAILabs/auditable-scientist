@@ -1,0 +1,9 @@
+{
+  "decisions": [
+    {
+      "variant_id": "ablation_constant",
+      "accepted": true,
+      "reason": "Single change."
+    }
+  ]
+}

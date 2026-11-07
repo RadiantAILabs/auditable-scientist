@@ -1,0 +1,22 @@
+{
+  "decision": "propose_variants",
+  "candidates": [
+    {
+      "variant_id": "ablation_constant",
+      "title": "Constant score control",
+      "kind": "ablation",
+      "base_program": "best",
+      "hypothesis": "Removing the intermediate variable leaves the score unchanged.",
+      "implementation_plan": [
+        "Return 2.0 directly."
+      ],
+      "target_rubrics": [
+        {
+          "id": "valid",
+          "type": "metric",
+          "description": "combined_score >= 1.0"
+        }
+      ]
+    }
+  ]
+}

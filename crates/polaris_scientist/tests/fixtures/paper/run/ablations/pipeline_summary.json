@@ -1,0 +1,26 @@
+{
+  "variants": [
+    {
+      "id": "no_swap",
+      "kind": "ablation",
+      "status": "completed",
+      "score": 1.5,
+      "correct": true,
+      "evals": 5
+    }
+  ],
+  "controls": [
+    {
+      "id": "control_best",
+      "kind": "control",
+      "status": "completed",
+      "score": 2.0,
+      "correct": true,
+      "evals": 5
+    }
+  ],
+  "replications_requested": 5,
+  "replications_observed": 5,
+  "cross_task": "not_applicable",
+  "caps_hit": []
+}

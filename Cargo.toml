@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = ["crates/polaris_scientist", "crates/polaris_scientist_run"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["Radiant AI"]
+rust-version = "1.97.0"
+repository = "https://github.com/RadiantAILabs/auditable-scientist"
+
+# `polaris-ai` comes from crates.io, and `polaris_code`, `polaris_cosmos` and
+# `polaris_ontrace` come from one revision of the polaris_code repository, so
+# the whole build resolves to a single copy of each. Check with
+# `cargo tree -i polaris-ai`: it must list exactly one package. The shared types
+# (`Server`, `Plugin`, `UserIO` and others) only unify across crates when it does.
+[workspace.dependencies]
+# The agent runtime. `package = "polaris-ai"` keeps `use polaris::…` short.
+polaris = { package = "polaris-ai", version = "0.8.1", default-features = false }
+polaris_code = { git = "https://github.com/RadiantAILabs/polaris_code", rev = "de14bc65618d7c904c1005b0eefe8679d1057e96" }
+polaris_cosmos = { git = "https://github.com/RadiantAILabs/polaris_code", rev = "de14bc65618d7c904c1005b0eefe8679d1057e96" }
+polaris_ontrace = { git = "https://github.com/RadiantAILabs/polaris_code", rev = "de14bc65618d7c904c1005b0eefe8679d1057e96", default-features = false, features = [
+    "oxigraph",
+] }
+
+tokio = { version = "1", features = [
+    "rt-multi-thread",
+    "macros",
+    "io-std",
+    "fs",
+    "sync",
+    "time",
+    "signal",
+] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["registry"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+futures = "0.3"
+# Diff engine, used to render unified diffs of edited files.
+similar = "2"

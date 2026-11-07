@@ -1,0 +1,125 @@
+# Role ceilings and tool grants for the paper phase.
+#
+# Every role runs in its own folder with the paper folder as a read-only copy
+# under inputs/paper/ and an empty outputs/ folder. The ceilings are starting
+# values: a role that reaches its turn, dollar or time ceiling stops, and the
+# phase decides what that means for its step.
+#
+# A role may set max_output_tokens, the most one model request may write. The
+# roles that write a whole manuscript in one request set 32000, so a long
+# draft is not cut off; the others use the runner's limit. The cost guard
+# reserves a request's whole output limit against the role's dollar ceiling,
+# so a limit must stay well under what the ceiling can pay for.
+
+[roles.reference_planner]
+prompt = "paper/reference_query_plan"
+node = "paper.refs.plan"
+max_turns = 15
+max_usd = 0.30
+timeout_seconds = 1800
+shell = []
+read_only = false
+skills = []
+
+[roles.paper_strategist]
+prompt = "paper/paper_strategy"
+node = "paper.strategy"
+max_turns = 20
+max_usd = 0.50
+timeout_seconds = 1800
+shell = []
+read_only = false
+skills = ["paper/skills/write-paper-standalone"]
+
+[roles.posthoc_ranker]
+prompt = "paper/posthoc_ranking"
+node = "paper.rank"
+max_turns = 15
+max_usd = 0.25
+timeout_seconds = 1800
+shell = []
+read_only = false
+skills = []
+
+[roles.paper_writer]
+prompt = "paper/paper_standalone"
+node = "paper.draft"
+max_turns = 80
+max_usd = 2.50
+timeout_seconds = 3600
+max_output_tokens = 32000
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "pdflatex *", "bibtex *", "bash skills/*", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["paper/skills/write-paper-standalone", "paper/skills/validate-paper", "paper/skills/scientific-evidence"]
+
+[roles.citation_gap_analyst]
+prompt = "paper/paper_reference_gaps"
+node = "paper.gaps"
+max_turns = 20
+max_usd = 0.40
+timeout_seconds = 1800
+shell = []
+read_only = false
+skills = []
+
+[roles.reference_planner_postdraft]
+prompt = "paper/reference_query_plan_postdraft"
+node = "paper.refs.plan2"
+max_turns = 10
+max_usd = 0.20
+timeout_seconds = 1800
+shell = []
+read_only = false
+skills = []
+
+[roles.paper_enricher]
+prompt = "paper/paper_standalone"
+node = "paper.enrich"
+max_turns = 40
+max_usd = 0.80
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "pdflatex *", "bibtex *", "bash skills/*", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["paper/skills/write-paper-standalone", "paper/skills/validate-paper", "paper/skills/scientific-evidence"]
+
+[roles.evidence_auditor]
+prompt = "paper/evidence_audit"
+node = "paper.audit"
+max_turns = 30
+max_usd = 0.60
+timeout_seconds = 1800
+shell = ["ls", "ls *", "cat *", "rg *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = true
+skills = []
+
+[roles.presentation_reviewer]
+prompt = "paper/review_json"
+node = "paper.review"
+max_turns = 25
+max_usd = 0.50
+timeout_seconds = 1800
+shell = []
+read_only = true
+skills = ["paper/skills/review-paper"]
+
+[roles.paper_repairer]
+prompt = "paper/paper_revision"
+node = "paper.repair"
+max_turns = 60
+max_usd = 1.50
+timeout_seconds = 3600
+max_output_tokens = 32000
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "pdflatex *", "bibtex *", "bash skills/*", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["paper/skills/write-paper-standalone", "paper/skills/validate-paper", "paper/skills/scientific-evidence"]
+
+[roles.paper_editor]
+prompt = "paper/paper_edit"
+node = "rev.edit"
+max_turns = 60
+max_usd = 1.50
+timeout_seconds = 3600
+max_output_tokens = 32000
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "pdflatex *", "bibtex *", "bash skills/*", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["paper/skills/write-paper-standalone", "paper/skills/validate-paper", "paper/skills/scientific-evidence"]

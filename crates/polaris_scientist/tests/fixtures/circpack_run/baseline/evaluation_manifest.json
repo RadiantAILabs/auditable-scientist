@@ -1,0 +1,12 @@
+{
+  "program_sha256": "d0891b906f747f2e97e75aae71de1800bec9f5f0e69fefde040aa755860b8420",
+  "evaluator_sha256": "11187fcb39331efccc1c23aa2761d6eaefce200d2d81df660f32e5595d18a4fa",
+  "evaluator_fingerprint_after": "11187fcb39331efccc1c23aa2761d6eaefce200d2d81df660f32e5595d18a4fa",
+  "integrity_valid": true,
+  "started": 1793944587,
+  "ended": 1793944587,
+  "exit_code": 0,
+  "timed_out": false,
+  "candidate_fingerprint_before": "d0891b906f747f2e97e75aae71de1800bec9f5f0e69fefde040aa755860b8420",
+  "candidate_fingerprint_after": "d0891b906f747f2e97e75aae71de1800bec9f5f0e69fefde040aa755860b8420"
+}

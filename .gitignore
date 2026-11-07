@@ -1,0 +1,9 @@
+/target/
+/out/
+.env
+.env.*
+*.pem
+*.swp
+.DS_Store
+__pycache__/
+*.pyc

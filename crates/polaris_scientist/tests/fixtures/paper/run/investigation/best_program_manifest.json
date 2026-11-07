@@ -1,0 +1,8 @@
+{
+  "combined_score": 2.0,
+  "correct": true,
+  "entrypoint_path": "src/program.py",
+  "program_dir": "@RUN@/investigation/ideas/c01_swap/program_1",
+  "source_attempt_id": "c01_swap_attempt_01",
+  "updated_at": "2026-01-01T00:00:00Z"
+}

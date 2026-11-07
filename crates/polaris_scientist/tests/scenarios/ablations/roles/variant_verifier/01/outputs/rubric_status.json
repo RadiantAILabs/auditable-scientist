@@ -1,0 +1,54 @@
+{
+  "rubrics": [
+    {
+      "id": "analysis_files_present",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "run_summary_schema_valid",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "metric_values_schema_valid",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "timeseries_schema_valid",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "metrics_consistent_with_metrics_json",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "correctness_recorded",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "variant_intent_preserved",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "single_change_scope",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    },
+    {
+      "id": "paper_analysis_ready",
+      "pass": true,
+      "evidence": "Candidate replaces the intermediate variable with the same constant; CSV infrastructure is preserved. Per-seed and geometry evidence are unavailable."
+    }
+  ],
+  "variant_id": "untrusted_identity",
+  "overall_pass": false,
+  "metrics": {
+    "combined_score": 99.0
+  }
+}

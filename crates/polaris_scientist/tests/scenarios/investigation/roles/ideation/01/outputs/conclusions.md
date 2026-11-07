@@ -1,0 +1,1 @@
+Try an explicit score variable.

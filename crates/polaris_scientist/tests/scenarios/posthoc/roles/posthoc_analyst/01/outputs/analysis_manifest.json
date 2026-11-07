@@ -1,0 +1,16 @@
+{
+  "analysis_id": "score_forensics",
+  "attempt_id": "attempt_1",
+  "outputs": [
+    "diagnostic.json"
+  ],
+  "summary": "Retained scalar attribution.",
+  "claim": "The saved score belongs to the retained candidate.",
+  "grounded": true,
+  "reran_evaluator": false,
+  "primary_metric_tolerance": 0.01,
+  "evidence_paths": [
+    "inputs/bundle/program/results/metrics.json"
+  ],
+  "checkpoint_paths": []
+}

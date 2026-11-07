@@ -1,0 +1,30 @@
+% fake: pages 10
+% fake: refs 9 420 550
+\documentclass{article}
+\usepackage{paper,times}
+\title{Pair swaps lift the packing score of a retained seed}
+\author{Anonymous authors}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study a seed circle-packing program and a pair-swap step that raises its
+score from 1.0 to 2.0.
+\end{abstract}
+\section{Introduction}
+Circle packing asks how large a sum of radii fits into a unit
+square~\cite{Graham1996,Collins2003}.
+\section{Related Work}
+Dense packings have been studied for decades~\cite{Szabo2007,Lubachevsky1997};
+we use simple local search~\cite{Kirkpatrick1983}.
+\section{Method}
+The retained program swaps pairs of circles and keeps a swap when the score
+rises.
+\section{Results}
+The best retained program scores 2.0, against 1.0 for the seed.
+% @evidence[[paper_data.json#grounding_sources.result.best_correct_score.value]]
+% @evidence[[paper_data.json#grounding_sources.baseline.combined_score.value]]
+\section{Conclusion}
+A pair swap doubles the score of the seed in our runs.
+\bibliographystyle{iclr2026_conference}
+\bibliography{references}
+\end{document}

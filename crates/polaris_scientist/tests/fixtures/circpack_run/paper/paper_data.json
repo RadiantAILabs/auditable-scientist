@@ -1,0 +1,426 @@
+{
+  "paper_profile": "standalone",
+  "presentation_contract": {
+    "variant_unit": "model_variant",
+    "run_unit": "seeded_run",
+    "internal_fields": [
+      "correct",
+      "eligible"
+    ],
+    "forbidden_visible_terms": [
+      "eligible",
+      "correct and eligible",
+      "correctness rate",
+      "worker_01",
+      "worker_02",
+      "combined_score",
+      "rubric"
+    ],
+    "preferred_terms": {
+      "idea": "model variant",
+      "ideas": "model variants",
+      "program": "seeded run",
+      "programs": "seeded runs",
+      "implementation": "configuration",
+      "implementations": "configurations"
+    },
+    "threshold_rate_rule": "If a thresholded rate appears in the visible paper, keep one reader-facing meaning per figure, such as target attainment, successful-run fraction, or non-collapse rate. Do not reuse a single label for different task-specific thresholds."
+  },
+  "task": {
+    "title": "Goal",
+    "constants": {
+      "num_circles": 26
+    }
+  },
+  "totals": {
+    "evaluated_programs": 2,
+    "correct_programs": 2,
+    "ablation_variants": 5,
+    "posthoc_analyses": 1
+  },
+  "best_program": {
+    "combined_score": 2.6297544045391086,
+    "correct": true,
+    "source_attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01"
+  },
+  "top_programs": [
+    {
+      "eval_index": 2,
+      "idea_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish",
+      "idea_dir_name": "002_time_boxed_multistart_slsqp_packing_with_lp_polish_and_safe_clone",
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 2.6297544045391086,
+      "correct": true,
+      "eligible": true
+    },
+    {
+      "eval_index": 1,
+      "idea_id": "c01_c01_multistart_slsqp_lp_polish",
+      "idea_dir_name": "001_multi_start_slsqp_joint_optimization_of_centers_and_radii_with_lp_polish",
+      "attempt_id": "c01_c01_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 0.9597642169962064,
+      "correct": true,
+      "eligible": true
+    }
+  ],
+  "improvement_trace": [
+    {
+      "id": "result.improvement_001",
+      "step_index": 1,
+      "x_index": 0,
+      "idea_id": "c01_c01_multistart_slsqp_lp_polish",
+      "attempt_id": "c01_c01_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 0.9597642169962064
+    },
+    {
+      "id": "result.improvement_002",
+      "step_index": 2,
+      "x_index": 1,
+      "idea_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish",
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 2.6297544045391086
+    }
+  ],
+  "all_programs": [
+    {
+      "eval_index": 1,
+      "idea_id": "c01_c01_multistart_slsqp_lp_polish",
+      "idea_dir_name": "001_multi_start_slsqp_joint_optimization_of_centers_and_radii_with_lp_polish",
+      "attempt_id": "c01_c01_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 0.9597642169962064,
+      "correct": true,
+      "eligible": true
+    },
+    {
+      "eval_index": 2,
+      "idea_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish",
+      "idea_dir_name": "002_time_boxed_multistart_slsqp_packing_with_lp_polish_and_safe_clone",
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01",
+      "combined_score": 2.6297544045391086,
+      "correct": true,
+      "eligible": true
+    }
+  ],
+  "ablations": {
+    "variants": [
+      {
+        "id": "control_best",
+        "kind": "control",
+        "status": "pass",
+        "score": 2.6297544045391086,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      },
+      {
+        "id": "baseline_reference",
+        "kind": "baseline",
+        "status": "pass",
+        "score": 0.9597642169962064,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      },
+      {
+        "id": "ablation_no_slsqp_refinement",
+        "kind": "ablation",
+        "status": "pass",
+        "score": 2.4306531547264782,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      },
+      {
+        "id": "ablation_no_lp_polish",
+        "kind": "ablation",
+        "status": "pass",
+        "score": 2.6297544045391086,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      },
+      {
+        "id": "ablation_single_start",
+        "kind": "ablation",
+        "status": "pass",
+        "score": 2.6297544045391086,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      }
+    ],
+    "controls": [
+      {
+        "id": "control_best",
+        "kind": "control",
+        "status": "pass",
+        "score": 2.6297544045391086,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      },
+      {
+        "id": "baseline_reference",
+        "kind": "baseline",
+        "status": "pass",
+        "score": 0.9597642169962064,
+        "correct": true,
+        "evals": 1,
+        "reason": "",
+        "cap_hit": false
+      }
+    ],
+    "replications_requested": 1,
+    "replications_observed": 1,
+    "cross_task": "not_applicable",
+    "caps_hit": []
+  },
+  "posthoc_analyses": [
+    {
+      "analysis_id": "contact_graph_rigidity",
+      "title": "contact_graph_rigidity",
+      "summary_text": "# Contact graph, active constraints and rattlers of the final packing\n\nEvidence: `inputs/bundle/program/results/extra.npz` (centers, radii) and `metrics.json` (combined_score 2.6297544045). Analysis only. No retraining, no evaluator run. Script: `outputs/analysis/contact_graph_rigidity.py`. Data: `outputs/analysis/contact_graph_rigidity.json`. Figure: `outputs/analysis/contact_graph.png`.\n\n## Result\nThe packing is a rigid, isostatic, KKT-certified local optimum. The hypothesis is half right: the constraint count reaches the DOF count, but there are no rattlers.\n\n- **Gaps are cleanly bimodal.** Wall gaps are ~1.0e-11 and circle-circle gaps are ~2.0e-11, so every radius appears to have been shrunk by ~1e-11 for feasibility. The largest \"contact\" gap is 2.0007e-11. The next-smallest gap, between circles 19 and 23, is 0.0466. Nothing lies between 2e-11 and 0.0466.\n- **Contact counts at tolerance ≤ 1e-12:** 0 contacts. The 1e-11 safety margin is below this tolerance, so this is not a physical statement.\n- **Contact counts at tolerances 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4 and 1e-3:** 57 circle-circle tangencies plus 21 wall contacts, 78 in total. The count does not change over this whole range. The wall contacts split as bottom 6, left 5, right 5, top 5.\n- **DOF:** 3·26 = 78 variables (x, y, r). The walls remove the trivial translations, so no trivial modes are subtracted. 78 active constraints give exactly 78 DOF, which is isostatic.\n- **Jacobian:** the 78×78 active-constraint Jacobian in (x, y, r) has rank 78 and null-space dimension 0. The packing is first-order rigid. This holds at every tolerance from 1e-10 to 1e-3.\n- **KKT:** I solved Jᵀλ = −∇(Σr) with λ ≥ 0 by NNLS. The residual is 0.0 (lstsq residual 7e-15). All 78 multipliers are strictly positive, from 0.0453 to 0.4221. The multiplier system is square and non-singular, so the multipliers are unique and strictly complementary. This is a genuine first-order vertex (KKT point) of the max-Σr problem, so SLSQP+LP converged and did not stop early. With a full-rank active set and strictly positive multipliers, the first-order conditions give a strict local maximum for the linearised problem. The contacts are nonlinear, so I did not run a second-order check, and I claim first-order jamming only.\n- **Rattlers:** none. Every circle has total degree (circle contacts plus wall contacts) of at least 4. The degree histogram is {4: 4 circles, 5: 15, 6: 5, 7: 2}. No circle has degree below 3, and none has zero contacts. The circle-contact graph is a single connected component of 26 circles. There are no rattler indices to report (empty list). The hypothesis claim of \"some rattlers carrying slack\" is not supported.\n- **Where area is wasted:** not in loose circles. The slack is in the interstitial voids between the tangent circles, so the loss is geometric. Circle radii range from 0.0659 (circle 5, a corner circle) to 0.1274 (circle 7, an interior circle), and no circle is free to grow or move.\n\n## Caveats\n- A local optimum does not imply a global optimum. This analysis says nothing about whether other contact topologies score better.\n- The ~1e-11 shrink means \"tangent\" means a gap of 1e-11 to 2e-11. Using a tolerance of 1e-12 or below reports zero contacts.\n- Degrees of 4 to 7 per circle are counted over both circle and wall contacts, and wall contacts count once per circle. The total of 78 equals the DOF count, and the Jacobian has full rank, so no contact is redundant at the tolerances tested.\n- Matplotlib was not installed. The PNG was rasterised with numpy and zlib. It has no text labels or colorbar. Circle colour encodes degree, with a legend strip at the bottom left for degrees 0, 1, 2, 3, 4 and 5 or more. Red lines are circle-circle contacts, blue dashed lines run from a circle centre to the wall it touches, and a magenta ring marks degree below 3 (none appear).\n- `outputs/analysis/_plot_patch.py` is a leftover helper that edited the plotting code of the main script. It is not part of the analysis.\n",
+      "rubric": {
+        "analysis_id": "contact_graph_rigidity",
+        "interestingness": {
+          "explains_score": "The score 2.62975 comes from a packing with exactly 78 active constraints and no free circles, so the score is set by the contact network. The analysis does not compare against other packings.",
+          "surprising_result": "The pre-registered hypothesis predicted rattlers; none exist. The contact set is exactly isostatic, and the KKT multipliers are unique and all positive.",
+          "robustness": "The contact count is identical (78) over tolerances 1e-10..1e-3, with a gap of more than 9 orders of magnitude between contact gaps (<=2e-11) and the next gap (0.0466).",
+          "limitations": "First-order analysis only; no second-order or global-optimality check. Figure has no text labels (matplotlib was unavailable)."
+        },
+        "tolerance_sweep": {
+          "1e-12": {
+            "contacts": 0,
+            "rank": 0
+          },
+          "1e-10 to 1e-3": {
+            "contacts": 78,
+            "pair": 57,
+            "wall": 21,
+            "rank": 78,
+            "null_dim": 0
+          }
+        },
+        "rattlers": []
+      },
+      "files": [
+        "analysis/_plot_patch.py",
+        "analysis/contact_graph.png",
+        "analysis/contact_graph_rigidity.json",
+        "analysis/contact_graph_rigidity.py",
+        "analysis_manifest.json",
+        "analysis_summary.md",
+        "interestingness_rubric.json",
+        "rubric_status.json"
+      ],
+      "rank": null
+    }
+  ],
+  "final_evaluation": {
+    "status": "degraded",
+    "reason": "no task_contract.json; sealed final evaluation not run",
+    "task_contract_present": false
+  },
+  "evidence_sources": {
+    "investigation": {
+      "status": "included",
+      "path": "investigation"
+    },
+    "ablations": {
+      "status": "included",
+      "path": "ablations"
+    },
+    "posthoc": {
+      "status": "included",
+      "path": "posthoc"
+    },
+    "final_evaluation": {
+      "status": "degraded",
+      "path": "final_evaluation",
+      "reason": "the final evaluation did not run to a result"
+    }
+  },
+  "limitations": [
+    "The baseline has no valid recorded score, so no baseline comparison is made."
+  ],
+  "inputs": {
+    "task": {
+      "found": true,
+      "detail": "task/task.md"
+    },
+    "investigation": {
+      "found": true,
+      "detail": "investigation/best_program_manifest.json"
+    },
+    "ablations": {
+      "found": true,
+      "detail": "ablations/pipeline_summary.json"
+    },
+    "posthoc": {
+      "found": true,
+      "detail": "posthoc/latest_manifest.json"
+    },
+    "final_evaluation": {
+      "found": true,
+      "detail": "final_evaluation/final_launch_failure.json"
+    }
+  },
+  "grounding_sources": {
+    "result.best_any_score": {
+      "id": "result.best_any_score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "result.best_correct_score": {
+      "id": "result.best_correct_score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "result.total_evaluated_programs": {
+      "id": "result.total_evaluated_programs",
+      "type": "count",
+      "value": 2
+    },
+    "result.total_correct_programs": {
+      "id": "result.total_correct_programs",
+      "type": "count",
+      "value": 2
+    },
+    "result.top_program_01": {
+      "id": "result.top_program_01",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "idea_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish",
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "result.top_program_02": {
+      "id": "result.top_program_02",
+      "type": "metric",
+      "value": 0.9597642169962064,
+      "idea_id": "c01_c01_multistart_slsqp_lp_polish",
+      "attempt_id": "c01_c01_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "result.improvement_001": {
+      "id": "result.improvement_001",
+      "type": "metric",
+      "value": 0.9597642169962064,
+      "idea_id": "c01_c01_multistart_slsqp_lp_polish",
+      "attempt_id": "c01_c01_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "result.improvement_002": {
+      "id": "result.improvement_002",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "idea_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish",
+      "attempt_id": "c02_c02_timeboxed_multistart_slsqp_lp_polish_attempt_01"
+    },
+    "ablation.control_best.score": {
+      "id": "ablation.control_best.score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "scope": "ablation",
+      "variant_id": "control_best",
+      "correct": true
+    },
+    "ablation.baseline_reference.score": {
+      "id": "ablation.baseline_reference.score",
+      "type": "metric",
+      "value": 0.9597642169962064,
+      "scope": "ablation",
+      "variant_id": "baseline_reference",
+      "correct": true
+    },
+    "ablation.ablation_no_slsqp_refinement.score": {
+      "id": "ablation.ablation_no_slsqp_refinement.score",
+      "type": "metric",
+      "value": 2.4306531547264782,
+      "scope": "ablation",
+      "variant_id": "ablation_no_slsqp_refinement",
+      "correct": true
+    },
+    "ablation.ablation_no_lp_polish.score": {
+      "id": "ablation.ablation_no_lp_polish.score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "scope": "ablation",
+      "variant_id": "ablation_no_lp_polish",
+      "correct": true
+    },
+    "ablation.ablation_single_start.score": {
+      "id": "ablation.ablation_single_start.score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "scope": "ablation",
+      "variant_id": "ablation_single_start",
+      "correct": true
+    },
+    "ablation.control.control_best.score": {
+      "id": "ablation.control.control_best.score",
+      "type": "metric",
+      "value": 2.6297544045391086,
+      "scope": "control",
+      "variant_id": "control_best",
+      "correct": true
+    },
+    "ablation.control.baseline_reference.score": {
+      "id": "ablation.control.baseline_reference.score",
+      "type": "metric",
+      "value": 0.9597642169962064,
+      "scope": "control",
+      "variant_id": "baseline_reference",
+      "correct": true
+    },
+    "result.total_ablation_variants": {
+      "id": "result.total_ablation_variants",
+      "type": "count",
+      "value": 5
+    },
+    "result.ablation_replications_requested": {
+      "id": "result.ablation_replications_requested",
+      "type": "count",
+      "value": 1
+    },
+    "result.ablation_replications_observed": {
+      "id": "result.ablation_replications_observed",
+      "type": "count",
+      "value": 1
+    },
+    "posthoc.contact_graph_rigidity.summary": {
+      "id": "posthoc.contact_graph_rigidity.summary",
+      "type": "posthoc_analysis",
+      "analysis_id": "contact_graph_rigidity"
+    },
+    "posthoc.contact_graph_rigidity.data._plot_patch": {
+      "id": "posthoc.contact_graph_rigidity.data._plot_patch",
+      "type": "posthoc_data",
+      "analysis_id": "contact_graph_rigidity",
+      "data_file": "_plot_patch"
+    },
+    "posthoc.contact_graph_rigidity.data.contact_graph": {
+      "id": "posthoc.contact_graph_rigidity.data.contact_graph",
+      "type": "posthoc_data",
+      "analysis_id": "contact_graph_rigidity",
+      "data_file": "contact_graph"
+    },
+    "posthoc.contact_graph_rigidity.data.contact_graph_rigidity": {
+      "id": "posthoc.contact_graph_rigidity.data.contact_graph_rigidity",
+      "type": "posthoc_data",
+      "analysis_id": "contact_graph_rigidity",
+      "data_file": "contact_graph_rigidity"
+    },
+    "posthoc.contact_graph_rigidity.data.rubric_status": {
+      "id": "posthoc.contact_graph_rigidity.data.rubric_status",
+      "type": "posthoc_data",
+      "analysis_id": "contact_graph_rigidity",
+      "data_file": "rubric_status"
+    }
+  }
+}

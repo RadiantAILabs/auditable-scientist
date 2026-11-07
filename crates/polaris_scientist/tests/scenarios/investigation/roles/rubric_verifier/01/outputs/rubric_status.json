@@ -1,0 +1,14 @@
+{
+  "rubrics": [
+    {
+      "id": "improve",
+      "pass": true,
+      "evidence": "Confirmed from candidate and host metrics."
+    },
+    {
+      "id": "explicit_score",
+      "pass": true,
+      "evidence": "Confirmed from candidate and host metrics."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "archive": {
+    "archive": "scientist-records.tar.gz",
+    "bytes": 24827724,
+    "sha256": "3e1b92fbfc5c740f650f3327d9a9f8997f08adc43a827500da9ca5893d0e684e",
+    "manifest_files": 3552,
+    "uncompressed_file_bytes": 87566209
+  },
+  "verification": {
+    "extracted_manifest_verified": true,
+    "byte_scan": {
+      "files_scanned": 3553,
+      "findings": []
+    },
+    "decoded_pdf_text_and_metadata_scan": {
+      "pdfs_scanned": 95,
+      "pages_scanned": 392,
+      "findings": []
+    },
+    "pdf_decoder": "pypdf==6.1.1",
+    "article_numeric_assertions": {
+      "total": 193,
+      "match": 189,
+      "cannot trace": 3,
+      "outside records": 1,
+      "mismatch": 0
+    },
+    "json_files_validated": 1423,
+    "published_article_and_figure_files_verified": 12
+  },
+  "scan_rules": "scrub.py",
+  "pdf_scan": "scan_pdf.py"
+}

@@ -1,0 +1,221 @@
+# Role ceilings and tool grants for research and optional task drafting.
+
+[roles.ideation]
+prompt = "research/idea"
+node = "idea.write"
+max_turns = 30
+max_usd = 0.60
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/create-idea", "research/skills/memory-log"]
+
+[roles.program_author]
+prompt = "research/author_program"
+node = "prog.edit"
+max_turns = 60
+max_usd = 1.20
+timeout_seconds = 21600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *"]
+read_only = false
+skills = ["research/skills/edit-program", "research/skills/memory-log"]
+
+[roles.rubric_verifier]
+prompt = "research/skills/verify-rubrics/SKILL"
+node = "rubric.judge"
+max_turns = 20
+max_usd = 0.40
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/verify-rubrics"]
+
+[roles.variant_retrofit]
+prompt = "research/variant_retrofit"
+node = "abl.retrofit"
+max_turns = 40
+max_usd = 0.80
+timeout_seconds = 7200
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = []
+
+[roles.variant_propose]
+prompt = "research/variant_generate"
+node = "abl.propose"
+max_turns = 25
+max_usd = 0.50
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = []
+
+[roles.variant_select]
+prompt = "research/variant_select"
+node = "abl.select"
+max_turns = 15
+max_usd = 0.25
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = []
+
+[roles.variant_author]
+prompt = "research/variant_author"
+node = "variant.edit"
+max_turns = 40
+max_usd = 0.80
+timeout_seconds = 7200
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *"]
+read_only = false
+skills = ["research/skills/edit-program", "research/skills/memory-log"]
+
+[roles.variant_verifier]
+prompt = "research/skills/verify-rubrics/SKILL"
+node = "variant.verify"
+max_turns = 20
+max_usd = 0.40
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/verify-rubrics"]
+
+[roles.variant_summarizer]
+prompt = "research/variant_readme"
+node = "abl.summarize"
+max_turns = 10
+max_usd = 0.20
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = []
+
+[roles.posthoc_proposer]
+prompt = "research/posthoc_generate"
+node = "ph.propose"
+max_turns = 25
+max_usd = 0.50
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = []
+
+[roles.posthoc_selector]
+prompt = "research/posthoc_select"
+node = "ph.select"
+max_turns = 15
+max_usd = 0.25
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = []
+
+[roles.posthoc_analyst]
+prompt = "research/posthoc_agent"
+node = "analysis.write"
+max_turns = 60
+max_usd = 1.20
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = []
+
+[roles.task_design_author]
+prompt = "research/design_task"
+node = "draft.design"
+max_turns = 80
+max_usd = 2.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_design_judge]
+prompt = "research/validate_task_design"
+node = "draft.design.review"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.design_structure_repair]
+prompt = "research/repair_task_design_structure"
+node = "draft.design.fix"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.design_semantic_repair]
+prompt = "research/repair_task_design"
+node = "draft.design.patch"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.design_delta_audit]
+prompt = "research/audit_task_design_delta"
+node = "draft.design.delta"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_scaffold_author]
+prompt = "research/draft_task"
+node = "draft.scaffold"
+max_turns = 80
+max_usd = 2.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_preflight_repair]
+prompt = "research/repair_task_preflight"
+node = "draft.contract"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_smoke_repair]
+prompt = "research/repair_task_smoke"
+node = "draft.smoke"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_alignment_judge]
+prompt = "research/validate_task"
+node = "draft.align"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = []
+read_only = false
+skills = ["research/skills/draft-task"]
+
+[roles.task_alignment_repair]
+prompt = "research/repair_task"
+node = "draft.qualify"
+max_turns = 40
+max_usd = 0.50
+timeout_seconds = 3600
+shell = ["ls", "ls *", "cat *", "rg *", "cp *", "mkdir *", "diff *", "python *", "python3 *", "grep", "grep *", "head", "head *", "tail", "tail *", "wc", "wc *", "sort", "sort *", "uniq", "uniq *", "cd *"]
+read_only = false
+skills = ["research/skills/draft-task"]

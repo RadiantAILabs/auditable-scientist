@@ -1,0 +1,48 @@
+[package]
+name = "polaris_scientist"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+description = "Research campaigns composed as Polaris graphs"
+
+[dependencies]
+polaris.workspace = true
+polaris_cosmos.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml = "0.8"
+sha2 = "0.10"
+hex = "0.4"
+regex = "1"
+thiserror = "2"
+async-trait = "0.1"
+futures.workspace = true
+tokio = { workspace = true, features = ["process", "io-util"] }
+tracing.workspace = true
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+tempfile = "3"
+walkdir = "2"
+globset = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+csv = "1"
+similar.workspace = true
+libc = "0.2"
+
+[[test]]
+name = "core"
+path = "tests/core/main.rs"
+
+[[test]]
+name = "e2e"
+path = "tests/e2e/main.rs"
+
+[[test]]
+name = "research"
+path = "tests/research/main.rs"
+
+[[test]]
+name = "evidence"
+path = "tests/evidence/main.rs"

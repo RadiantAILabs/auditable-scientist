@@ -1,0 +1,11 @@
+{
+  "overall_pass": true,
+  "rubrics": [
+    {
+      "id": "artifact_only",
+      "pass": true,
+      "evidence": "Only saved metrics were read."
+    }
+  ],
+  "analysis_id": "score_forensics"
+}

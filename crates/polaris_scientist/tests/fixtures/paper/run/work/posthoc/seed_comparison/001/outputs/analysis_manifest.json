@@ -1,0 +1,7 @@
+{
+  "analysis_id": "seed_comparison",
+  "outputs": [
+    "diagnostic.json"
+  ],
+  "grounded": true
+}

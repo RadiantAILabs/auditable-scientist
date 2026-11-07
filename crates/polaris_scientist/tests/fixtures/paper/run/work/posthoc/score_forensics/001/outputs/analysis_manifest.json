@@ -1,0 +1,7 @@
+{
+  "analysis_id": "score_forensics",
+  "outputs": [
+    "diagnostic.json"
+  ],
+  "grounded": true
+}

@@ -1,0 +1,20 @@
+auditable-scientist
+Copyright 2026 Radiant AI
+Licensed under the Apache License, Version 2.0. The licence is in the file
+LICENSE at the root of this repository.
+
+This project reproduces AI-Scientist-v3 by Sakana AI
+(https://github.com/SakanaAI/AI-Scientist-v3) as a Polaris graph. It is built
+on polaris_code (https://github.com/RadiantAILabs/polaris_code).
+
+Parts of this repository are derived from AI-Scientist-v3, Copyright 2026
+Sakana AI, which is licensed under the Apache License, Version 2.0. Each of
+these folders keeps its own LICENSE and NOTICE. The NOTICE of a folder lists
+the files taken from AI-Scientist-v3 and what was changed in each of them.
+
+- crates/polaris_scientist/assets/prompts/paper
+  Paper-writing prompts and skills. See the NOTICE in that folder.
+- crates/polaris_scientist/assets/prompts/research
+  Research prompts and skills. See the NOTICE in that folder.
+- crates/polaris_scientist/assets/venues/iclr
+  The ICLR paper template and the venue brief. See the NOTICE in that folder.

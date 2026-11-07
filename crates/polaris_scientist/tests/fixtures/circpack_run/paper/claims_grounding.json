@@ -1,0 +1,136 @@
+{
+  "claims": [
+    {
+      "claim": "The full pipeline attains a sum of radii of 2.6298 on the n=26 unit-square instance.",
+      "source_ids": [
+        "result.best_correct_score",
+        "ablation.control_best.score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "The recorded baseline-reference variant (described only as a simpler construction; source not staged) has a recorded score of 0.9598 of unverified provenance (the same value is recorded for attempt c01_c01_multistart_slsqp_lp_polish_attempt_01); its ring layout is inferred from the fallback code in the control program, and paper_data.json separately lists a limitation that the baseline has no valid recorded score. The ratio of the control score to this recorded score, and the split of the gap between the two, are arithmetic on the recorded scores.",
+      "source_ids": [
+        "ablation.baseline_reference.score",
+        "ablation.control.baseline_reference.score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "Removing SLSQP refinement lowers the sum of radii to 2.4307, below the control score.",
+      "source_ids": [
+        "ablation.ablation_no_slsqp_refinement.score",
+        "ablation.control_best.score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "Removing the LP polish or using a single start returns the control score 2.6298.",
+      "source_ids": [
+        "ablation.ablation_no_lp_polish.score",
+        "ablation.ablation_single_start.score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "Five model variants were evaluated with one replication requested and one observed.",
+      "source_ids": [
+        "result.total_ablation_variants",
+        "result.ablation_replications_requested",
+        "result.ablation_replications_observed"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "The final packing is isostatic and first-order rigid: the numbers of circle and wall contacts equal the degrees of freedom, the active Jacobian has full rank, all KKT multipliers are strictly positive, and no circle is a rattler. This is a first-order certificate only (active-constraint KKT conditions hold numerically at the stated contact tolerance, on near-active constraints); no second-order check was run and no SLSQP termination status is staged.",
+      "source_ids": [
+        "posthoc.contact_graph_rigidity.summary",
+        "posthoc.contact_graph_rigidity.data.contact_graph_rigidity"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "The contact degree histogram, gap bimodality and tolerance sweep are read from the contact-graph analysis files.",
+      "source_ids": [
+        "posthoc.contact_graph_rigidity.data.contact_graph_rigidity",
+        "posthoc.contact_graph_rigidity.data.contact_graph"
+      ],
+      "citation_keys": []
+    },
+    {
+      "claim": "The n=26 sum-of-radii instance appears among the problems tackled by AlphaEvolve; open-source frameworks and surveys of LLM-driven program search have followed.",
+      "source_ids": [
+        "ref.openalex.W4415108068",
+        "ref.openalex.W7224418972",
+        "ref.openalex.W7165647483"
+      ],
+      "citation_keys": [
+        "Alexander2025AlphaEvolve",
+        "Assumpo2026CodeEvolve",
+        "Mao2026Driven"
+      ]
+    },
+    {
+      "claim": "Best-known packings are tabulated on Packomania and recent reports of records and certificates for circle packings refer to those tables; no numeric comparison is made.",
+      "source_ids": [
+        "ref.openalex.W7211912852",
+        "ref.openalex.W7214544828",
+        "ref.openalex.W7214990190"
+      ],
+      "citation_keys": [
+        "Sander2026Guided",
+        "MokiJulio2026Moki",
+        "Preciado2026Certified"
+      ]
+    },
+    {
+      "claim": "ImprovEvolve combines basin hopping with LLM-guided evolutionary search.",
+      "source_ids": [
+        "ref.openalex.W7128708936"
+      ],
+      "citation_keys": [
+        "Kravatskiy2026ImprovEvolve"
+      ]
+    },
+    {
+      "claim": "Heuristic searches for unequal circles in a square container and general-purpose global solvers for packing models are related formulations.",
+      "source_ids": [
+        "ref.openalex.W2568157925",
+        "ref.openalex.W7160548567"
+      ],
+      "citation_keys": [
+        "He2016Packing",
+        "Berthold2026Global"
+      ]
+    },
+    {
+      "claim": "Exact certificates for best-known packings and rigorous packing results for other containers exist and are stronger than the floating-point first-order analysis used here.",
+      "source_ids": [
+        "ref.openalex.W7214544828",
+        "ref.openalex.W2895117976"
+      ],
+      "citation_keys": [
+        "MokiJulio2026Moki",
+        "Montanher2018Rigorous"
+      ]
+    },
+    {
+      "claim": "SQP/SLSQP variants have been studied for feasible-path process optimization; the cost of repeated local searches is a design concern in global optimization.",
+      "source_ids": [
+        "ref.openalex.W4391940821",
+        "ref.openalex.W3031230705"
+      ],
+      "citation_keys": [
+        "Ma2024Improved",
+        "Tigli2020Saving"
+      ]
+    },
+    {
+      "claim": "No held-out final evaluation exists; all scores are in-run development values.",
+      "source_ids": [
+        "result.best_correct_score"
+      ],
+      "citation_keys": []
+    }
+  ]
+}

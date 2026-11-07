@@ -1,0 +1,8 @@
+include = ["../task", "../investigation", "../ablations", "../final", "../posthoc", "../paper", "../review"]
+
+[default.usage]
+model_id = "aws.bedrock/global.anthropic.claude-sonnet-5-5"
+input = 1000
+output = 200
+requests = 1
+micros = 3000

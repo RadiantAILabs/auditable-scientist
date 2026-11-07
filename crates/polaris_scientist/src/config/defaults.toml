@@ -1,0 +1,90 @@
+run_id = ""
+[campaign]
+phases = ["task_drafting", "investigation", "ablations", "final_evaluation", "posthoc", "paper"]
+no_winner_policy = "best_available"
+[paths]
+results_root = "results"
+[task]
+dir = ""
+drafting = false
+[task_drafting]
+design_max_repairs = 8
+contract_max_repairs = 3
+smoke_max_repairs = 3
+smoke_max_infrastructure_attempts = 3
+alignment_max_repairs = 10
+qualification_max_repairs = 4
+qualification_max_infrastructure_attempts = 3
+agent_transient_max_attempts = 4
+production_entry_timeout_seconds = 300
+max_gate_checks_per_repair = 12
+max_runtime_bytes = 17179869184
+draft_max_attempts = 3
+evaluator_smoke_timeout_seconds = 1800
+timeout_seconds = 57600
+[investigation.execution]
+rubric_judge = false
+max_idea_cycles = 3
+workers = 1
+max_program_evals_per_attempt = 1
+max_idea_generation_attempts = 2
+prune_every_n_cycles = 0
+parallel_fail_fast = false
+run_timeout_seconds = 21600
+idea_timeout_seconds = 3600
+[ablations.execution]
+max_ablations = 3
+max_extra_baselines = 3
+num_replications = 5
+max_evals_per_variant = 5
+variant_timeout_seconds = 7200
+generation_timeout_seconds = 1800
+retrofit_timeout_seconds = 3600
+selection_timeout_seconds = 1200
+readme_timeout_seconds = 1200
+[posthoc.execution]
+max_selected_analyses = 3
+max_attempts_per_analysis = 3
+analysis_timeout_seconds = 3600
+generation_timeout_seconds = 1800
+selection_timeout_seconds = 1200
+primary_metric_tolerance = 0.01
+[paper]
+venue = "iclr"
+standalone = true
+two_stage = true
+min_refs = 25
+max_refs = 30
+max_repair_rounds = 10
+review_rounds = 0
+[paper.latex]
+command = "pdflatex"
+timeout_seconds = 300
+[review]
+mode = "off"
+[budget]
+max_usd = "0"
+min_grant_fraction = 0.25
+wall_seconds = 0
+[budget.cumulative_share]
+task_drafting = 0.30
+investigation = 0.30
+ablations = 0.47
+final_evaluation = 0.47
+posthoc = 0.57
+paper = 0.93
+[runner]
+kind = "session"
+scenario = ""
+provider = "bedrock"
+region = "eu-west-2"
+model = "aws.bedrock/global.anthropic.claude-sonnet-5-5"
+max_output_tokens = 16384
+interrupt_grace_seconds = 15
+[evaluation]
+timeout_seconds = 300
+grace_seconds = 5
+python = "python3"
+wheelhouse = "/opt/wheelhouse"
+extra_packages = ["matplotlib", "pandas"]
+[roles]

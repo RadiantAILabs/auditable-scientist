@@ -1,0 +1,68 @@
+polaris_scientist: paper prompts and skills
+
+The Markdown prompts, the skill folders (SKILL.md files, scripts and templates)
+and the licence text in this folder are derived from AI-Scientist-v3
+(https://github.com/SakanaAI/AI-Scientist-v3), Copyright 2026 Sakana AI,
+which is licensed under the Apache License, Version 2.0. The licence is in the
+file LICENSE in this folder.
+
+The files were changed. Every Markdown file and every Python or shell script
+carries a two-line header with the path of its original (relative to the root
+of AI-Scientist-v3) and the list of its changes. The list below repeats the
+changes in one line per file. JSON files cannot carry a header, so their
+changes are listed here only. Where a line says "none", the file is a copy of
+the original with a header only (or, for JSON, a plain copy).
+
+Changes common to the prompts: the memory protocol, the global memory input,
+the rubrics section, the contributions scaffold, the paper edit context, the
+orchestrator-rendered concept figure steps and every use of image-model or
+API-key context were removed; paths now use the placeholders of the phase
+vocabulary and the inputs/, outputs/ and skills/ layout; the final_evaluation
+paragraph was rewritten for the paper_data.json of this system. In the writer,
+editor and write-paper-standalone files the advice to install tools and pandas
+became the rule to use only what is already installed, because the agent has no
+network.
+
+Prompts (original under src/prompts/ in AI-Scientist-v3)
+- reference_query_plan.md (reference_query_plan.md): removed the rubrics section, the global memory line and block, and the memory protocol.
+- paper_strategy.md (paper_strategy.md): rewrote the final_evaluation paragraph, removed the study-field paragraph, the rubrics, the edit context section, the contributions scaffold, the memory protocol, the edit-mode fields and rules 17 to 19; the final prompt family is the name paper_standalone; the generator list has no concept-figure generator.
+- posthoc_ranking.md (paper_posthoc_ranking.md): removed the rubrics section; the inlined analyses became a pointer to posthoc_analyses in paper_data.json and the files under dossier/posthoc/; the output path is a placeholder.
+- paper_standalone.md (paper_standalone.md): used by the writer and the enricher; added a Working Folder section, which also says that create_file does not replace a file and how to replace a copied one; removed the study-field paragraph, the source evidence pointer, the rubrics, the memory protocol, the contributions scaffold, the global memory and image-model lines and the concept figure steps; rewrote the posthoc bullets, the Data Schema section and the source id convention; adapted the author block rule to a file that holds the whole \author command. Added the Printed numbers section (every number the paper prints is backed by a claim and a recorded value or derivation), the source id families task.constants and program.constants and the values of post-hoc data sources, and the baseline provenance. Added the paragraph and the data schema line that name the staged specification, source diff and verification record of each ablation variant and the control, and the rule that a description of a variant must agree with them.
+- paper_reference_gaps.md (paper_reference_gaps.md): removed the global memory line.
+- reference_query_plan_postdraft.md (reference_query_plan_postdraft.md): removed the global memory line.
+- evidence_audit.md (paper_review/evidence_audit.md): rewrote the final_evaluation paragraph, removed the study-field paragraph; the audit packet is the paper snapshot folder; removed the retry-feedback files (a sentence about the task prompt replaces them); the text reply contract is unchanged. Added the paragraph that checks each description of a baseline, an ablation variant or the control against its staged specification, source diff and verification record, one line for it in the audit standard and a second failing example; the original has no wording for this.
+- review_json.md (paper_review/review_json.md): same changes as evidence_audit.md; the review is a reply in the final message, so the Must write section and the review JSON path were dropped; the JSON contract is unchanged.
+- paper_revision.md (paper_revision.md): added a Working Folder section, with the same create_file note; the inputs name the repair feedback, review feedback, evidence audit and current paper snapshot; removed the study-field paragraph, the source evidence pointer, the scope audit outputs and the scope audit JSON contract. Added the Printed numbers section (every number the paper prints is backed by a claim and a recorded value or derivation), the source id families task.constants and program.constants and the values of post-hoc data sources, and the baseline provenance. Added the paragraph on the staged files of each ablation variant and the control, and the rule for fixing a finding about the description of a variant.
+- paper_edit.md (paper_edit_standalone.md): used by the editor; same changes as paper_standalone.md; in addition removed the scope audit outputs, the whole Method Scope Audit Contract section, the compatibility audit item, requirements 13, 15, 16 and 17, and the edit context bullets that depend on staged new-program inputs. Added the Printed numbers section (every number the paper prints is backed by a claim and a recorded value or derivation), the source id families task.constants and program.constants and the values of post-hoc data sources, and the baseline provenance. Same variant files paragraph and data schema line as paper_standalone.md.
+
+Skills (original under src/agents/skills/ in AI-Scientist-v3)
+- skills/write-paper-standalone/SKILL.md (write-paper-standalone/SKILL.md): read list and outputs use the placeholders; removed the contributions, global memory and presentation_contract items, the concept figure items and the watermark item; commands use the skills/ paths; adapted the author block item.
+- skills/write-paper-standalone/scripts/validate_claims.py (write-paper-standalone/scripts/validate_claims.py): replaced the tool-specific skill folder names by the folder name skills.
+- skills/write-paper-standalone/templates/claims_grounding.schema.json (write-paper/templates/claims_grounding.schema.json): none (plain copy).
+- skills/validate-paper/SKILL.md (validate-paper/SKILL.md): commands use the skills/ paths and the placeholders; the claims validator is the one of write-paper-standalone; removed the validate_figures.py command.
+- skills/validate-paper/scripts/compile_latex.sh, validate_tex_refs.py, validate_rendered_si.py (validate-paper/scripts/): none (header only).
+- skills/validate-paper/scripts/validate_compile_inputs.py (validate-paper/scripts/validate_compile_inputs.py): replaced the tool-specific skill folder names by the folder name skills.
+- skills/validate-paper/templates/figure_manifest.schema.json (validate-paper/templates/figure_manifest.schema.json): removed the concept-figure generator from the generator enums and removed the rule that exempted it from the PDF requirement, so every figure needs a PDF (JSON, no header).
+- skills/scientific-evidence/SKILL.md (scientific-evidence/SKILL.md): script paths changed to skills/...; the workspace root is the paper folder; the report is named by its default location.
+- skills/scientific-evidence/scripts/scientific_evidence.py (scientific-evidence/scripts/scientific_evidence.py): replaced the tool-specific skill folder names by the folder name skills.
+- skills/scientific-evidence/scripts/scientific_evidence.sh (scientific-evidence/scripts/scientific_evidence.sh): none (header only).
+- skills/review-paper/SKILL.md (review-paper/SKILL.md): the review is a reply in the final message instead of paper_review.json; the packet and the retry files were replaced as in review_json.md.
+
+Script checks
+All vendored scripts use only the Python standard library or the shell. None
+imports from the original repository, none uses a repository-root path, none
+uses the network. compile_latex.sh and validate_rendered_si.py call the
+external commands pdflatex, bibtex and pdftotext, which must be on PATH.
+
+New files
+- NOTICE (this file).
+- ../../venues/iclr/author_block.tex and ../../venues/iclr/NOTICE are new (see the NOTICE in assets/venues/iclr).
+
+Original files left out
+- agents/skills/generate-concept-figure: needs an image model and API keys, which are not available.
+- agents/skills/memory-log: there is no memory system.
+- agents/skills/retrieve-references: the agent has no network; the host retrieves references.
+- agents/skills/write-paper: the standalone variant is used instead. Only its claims_grounding.schema.json and its templates/iclr files were taken (the latter are in assets/venues/iclr).
+- agents/skills/write-paper/templates/alife: another venue.
+- agents/skills/validate-paper/scripts/validate_figures.py: imports src.orchestrator modules of the original repository and cannot run alone.
+- All other prompts of src/prompts: not used by this phase.

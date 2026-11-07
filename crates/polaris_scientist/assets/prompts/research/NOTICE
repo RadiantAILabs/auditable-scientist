@@ -1,0 +1,7 @@
+Research prompts and skills from SakanaAI/AI-Scientist-v3, commit df83138.
+Copyright Sakana AI. Licensed under Apache License 2.0; see LICENSE.
+Each prompt records its source and adaptations in its header.
+
+posthoc_agent.md is adapted further: its output contracts say that manifest outputs are paths relative
+to outputs/, that evidence paths start with inputs/bundle/ or outputs/, and that each rubric entry has an
+evidence sentence, because the analysis checker enforces those rules.

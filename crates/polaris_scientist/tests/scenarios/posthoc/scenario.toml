@@ -1,0 +1,2 @@
+[default]
+usage = {input=1000, output=200, micros=3000}

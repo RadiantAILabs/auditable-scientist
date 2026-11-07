@@ -1,0 +1,28 @@
+{
+  "analyses": [
+    {
+      "id": "score_forensics",
+      "status": "valid",
+      "attempts": 1,
+      "reason": "",
+      "rubric_status": {},
+      "outputs": [
+        "diagnostic.json"
+      ],
+      "output_dir": "@RUN@/work/posthoc/score_forensics/001/outputs"
+    },
+    {
+      "id": "seed_comparison",
+      "status": "valid",
+      "attempts": 1,
+      "reason": "",
+      "rubric_status": {},
+      "outputs": [
+        "diagnostic.json"
+      ],
+      "output_dir": "@RUN@/work/posthoc/seed_comparison/001/outputs"
+    }
+  ],
+  "rejected": [],
+  "selected_analysis_id": null
+}

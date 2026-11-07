@@ -1,0 +1,17 @@
+polaris_scientist: ICLR venue assets
+
+The files in this folder, except author_block.tex and this NOTICE, are derived
+from AI-Scientist-v3 (https://github.com/SakanaAI/AI-Scientist-v3),
+Copyright 2026 Sakana AI, which is licensed under the Apache License,
+Version 2.0. The licence is in the file LICENSE in this folder.
+
+Files (original path relative to the root of AI-Scientist-v3)
+- paper.tex (src/agents/skills/write-paper/templates/iclr/paper.tex): none (plain copy). The template markers \usepackage{paper,times} and \iclrfinalcopy, which the paper checks look for, are unchanged.
+- paper.sty (src/agents/skills/write-paper/templates/iclr/paper.sty): none (plain copy).
+- paper.bst (src/agents/skills/write-paper/templates/iclr/paper.bst): none (plain copy).
+- venue_brief.md (src/templates/paper_venues/iclr.md): changed, see the header of the file: the body-page budget placeholder became the fixed numbers the paper check uses, and the paper-format placeholder became the name iclr.
+- LICENSE: copy of the licence of AI-Scientist-v3.
+
+New files
+- author_block.tex: new, one line, the \author block for double-blind review ("Anonymous authors", "Paper under double-blind review"). It holds the complete \author command.
+- NOTICE (this file).

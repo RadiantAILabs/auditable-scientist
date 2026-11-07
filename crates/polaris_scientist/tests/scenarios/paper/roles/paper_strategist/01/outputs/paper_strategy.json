@@ -1,0 +1,36 @@
+{
+  "status": "ready",
+  "selected_prompt_family": "paper_standalone",
+  "recommended_title": "Pair swaps lift the packing score of a retained seed",
+  "central_question": "Does a pair swap improve a seed packing program?",
+  "central_thesis": "A pair swap doubles the score of the seed.",
+  "narrative_rationale": "One retained program and its seed give a clean comparison.",
+  "supplementary_plan": {
+    "purpose": "Show the retained scores behind the headline.",
+    "planned_subsections": [
+      {
+        "heading": "Retained scores",
+        "grounded_content": "Best and seed scores.",
+        "source_ids": [
+          "result.best_correct_score",
+          "baseline.combined_score"
+        ]
+      }
+    ]
+  },
+  "method_groups": [
+    {
+      "name": "pair swap",
+      "role": "main",
+      "include_reason": "it is the retained method"
+    }
+  ],
+  "results_focus": [
+    "best score against the seed"
+  ],
+  "figure_plan": [],
+  "figure_specs": [],
+  "forbidden_headings": [],
+  "forbidden_phrases": [],
+  "notes_for_writer": []
+}

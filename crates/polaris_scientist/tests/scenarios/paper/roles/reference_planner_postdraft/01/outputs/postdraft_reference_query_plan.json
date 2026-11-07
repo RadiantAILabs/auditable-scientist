@@ -1,0 +1,17 @@
+{
+  "status": "ready",
+  "central_topic": "dense packings",
+  "core_methods": [],
+  "comparators": [],
+  "benchmarks": [],
+  "architectural_shifts": [],
+  "result_driven_themes": [],
+  "forbidden_query_patterns": [],
+  "queries": [
+    {
+      "query": "curved hexagonal packings of disks",
+      "rationale": "a gap named in the draft",
+      "category": "benchmark_context"
+    }
+  ]
+}

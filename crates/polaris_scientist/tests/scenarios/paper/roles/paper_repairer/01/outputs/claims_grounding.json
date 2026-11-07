@@ -1,0 +1,33 @@
+{
+  "claims": [
+    {
+      "id": "c1",
+      "claim": "The best retained program scores 2.0, against 1.0 for the seed.",
+      "source_ids": [
+        "result.best_correct_score",
+        "baseline.combined_score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "id": "c2",
+      "claim": "Pair swapping raised the score of the seed program.",
+      "source_ids": [
+        "result.best_correct_score"
+      ],
+      "citation_keys": []
+    },
+    {
+      "id": "c3",
+      "claim": "Packings of equal circles in a square have been studied before.",
+      "source_ids": [
+        "ref.s2.p2",
+        "ref.s2.p1"
+      ],
+      "citation_keys": [
+        "Graham1996",
+        "Collins2003"
+      ]
+    }
+  ]
+}
